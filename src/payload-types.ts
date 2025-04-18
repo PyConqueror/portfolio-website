@@ -74,6 +74,9 @@ export interface Config {
     users: User;
     projects: Project;
     'about-me': AboutMe;
+    gallery: Gallery;
+    resume: Resume;
+    'hero-section': HeroSection;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -92,6 +95,9 @@ export interface Config {
     users: UsersSelect<false> | UsersSelect<true>;
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     'about-me': AboutMeSelect<false> | AboutMeSelect<true>;
+    gallery: GallerySelect<false> | GallerySelect<true>;
+    resume: ResumeSelect<false> | ResumeSelect<true>;
+    'hero-section': HeroSectionSelect<false> | HeroSectionSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -739,9 +745,21 @@ export interface Project {
   id: string;
   name: string;
   description: string;
-  githubLink?: string | null;
-  type: 'hobby' | 'professional';
+  /**
+   * Display this project on the home page
+   */
+  featured?: boolean | null;
+  /**
+   * Display order (lower numbers appear first)
+   */
+  order?: number | null;
+  demoUrl?: string | null;
+  githubUrl?: string | null;
   image: string | Media;
+  tags: {
+    tag: string;
+    id?: string | null;
+  }[];
   technologies: {
     technology: string;
     id?: string | null;
@@ -756,38 +774,57 @@ export interface Project {
 export interface AboutMe {
   id: string;
   title: string;
-  description: {
-    root: {
-      type: string;
-      children: {
-        type: string;
-        version: number;
-        [k: string]: unknown;
-      }[];
-      direction: ('ltr' | 'rtl') | null;
-      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-      indent: number;
-      version: number;
-    };
-    [k: string]: unknown;
-  };
+  description: string;
+  description2: string;
   profileImage: string | Media;
   skills: {
-    category: string;
-    items: {
-      skill: string;
-      proficiency: 'beginner' | 'intermediate' | 'advanced' | 'expert';
-      id?: string | null;
-    }[];
+    skill: string;
     id?: string | null;
   }[];
-  socialLinks?:
-    | {
-        platform: 'github' | 'linkedin' | 'twitter';
-        url: string;
-        id?: string | null;
-      }[]
-    | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery".
+ */
+export interface Gallery {
+  id: string;
+  image: string | Media;
+  description: string;
+  year: string;
+  alt: string;
+  fullDescription?: string | null;
+  /**
+   * Display order (lower numbers appear first)
+   */
+  order: number;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resume".
+ */
+export interface Resume {
+  id: string;
+  resumeFile?: (string | null) | Media;
+  /**
+   * URL to external resume page (used if no file is uploaded)
+   */
+  resumeUrl?: string | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero-section".
+ */
+export interface HeroSection {
+  id: string;
+  title: string;
+  subtitle: string;
+  backgroundImage?: (string | null) | Media;
   updatedAt: string;
   createdAt: string;
 }
@@ -990,6 +1027,18 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'about-me';
         value: string | AboutMe;
+      } | null)
+    | ({
+        relationTo: 'gallery';
+        value: string | Gallery;
+      } | null)
+    | ({
+        relationTo: 'resume';
+        value: string | Resume;
+      } | null)
+    | ({
+        relationTo: 'hero-section';
+        value: string | HeroSection;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1355,9 +1404,17 @@ export interface UsersSelect<T extends boolean = true> {
 export interface ProjectsSelect<T extends boolean = true> {
   name?: T;
   description?: T;
-  githubLink?: T;
-  type?: T;
+  featured?: T;
+  order?: T;
+  demoUrl?: T;
+  githubUrl?: T;
   image?: T;
+  tags?:
+    | T
+    | {
+        tag?: T;
+        id?: T;
+      };
   technologies?:
     | T
     | {
@@ -1374,27 +1431,49 @@ export interface ProjectsSelect<T extends boolean = true> {
 export interface AboutMeSelect<T extends boolean = true> {
   title?: T;
   description?: T;
+  description2?: T;
   profileImage?: T;
   skills?:
     | T
     | {
-        category?: T;
-        items?:
-          | T
-          | {
-              skill?: T;
-              proficiency?: T;
-              id?: T;
-            };
+        skill?: T;
         id?: T;
       };
-  socialLinks?:
-    | T
-    | {
-        platform?: T;
-        url?: T;
-        id?: T;
-      };
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery_select".
+ */
+export interface GallerySelect<T extends boolean = true> {
+  image?: T;
+  description?: T;
+  year?: T;
+  alt?: T;
+  fullDescription?: T;
+  order?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resume_select".
+ */
+export interface ResumeSelect<T extends boolean = true> {
+  resumeFile?: T;
+  resumeUrl?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "hero-section_select".
+ */
+export interface HeroSectionSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  backgroundImage?: T;
   updatedAt?: T;
   createdAt?: T;
 }
