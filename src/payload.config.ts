@@ -13,6 +13,9 @@ import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
 import Projects from './collections/Projects'
 import AboutMe from './collections/AboutMe'
+import Gallery from './collections/Gallery'
+import Resume from './collections/Resume'
+import HeroSection from './collections/HeroSection'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
@@ -64,7 +67,18 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [Pages, Posts, Media, Categories, Users, Projects, AboutMe],
+  collections: [
+    Pages,
+    Posts,
+    Media,
+    Categories,
+    Users,
+    Projects,
+    AboutMe,
+    Gallery,
+    Resume,
+    HeroSection,
+  ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer],
   plugins: [
