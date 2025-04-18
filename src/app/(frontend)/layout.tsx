@@ -6,7 +6,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "UltraFolio",
+  title: "Wan Aqim ©",
   description: "Portfolio website inspired by the minimalist design of the Ultra theme."
 }
 
@@ -26,5 +26,3 @@ export default function RootLayout({
   )
 }
 
-
-import './globals.css'
