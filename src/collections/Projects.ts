@@ -4,7 +4,7 @@ const Projects: CollectionConfig = {
   slug: 'projects',
   admin: {
     useAsTitle: 'name',
-    defaultColumns: ['name', 'type', 'updatedAt'],
+    defaultColumns: ['name', 'type', 'featured', 'updatedAt'],
   },
   access: {
     read: () => true,
@@ -21,30 +21,51 @@ const Projects: CollectionConfig = {
       required: true,
     },
     {
-      name: 'githubLink',
-      type: 'text',
-      required: false,
+      name: 'featured',
+      type: 'checkbox',
+      defaultValue: false,
+      label: 'Featured Project',
+      admin: {
+        description: 'Display this project on the home page',
+      },
     },
     {
-      name: 'type',
-      type: 'select',
-      required: true,
-      options: [
-        {
-          label: 'Hobby',
-          value: 'hobby',
-        },
-        {
-          label: 'Professional',
-          value: 'professional',
-        },
-      ],
+      name: 'order',
+      type: 'number',
+      defaultValue: 0,
+      admin: {
+        description: 'Display order (lower numbers appear first)',
+      },
+    },
+    {
+      name: 'demoUrl',
+      type: 'text',
+      required: false,
+      label: 'Demo URL',
+    },
+    {
+      name: 'githubUrl',
+      type: 'text',
+      required: false,
+      label: 'GitHub Repository URL',
     },
     {
       name: 'image',
       type: 'upload',
       relationTo: 'media',
       required: true,
+    },
+    {
+      name: 'tags',
+      type: 'array',
+      required: true,
+      fields: [
+        {
+          name: 'tag',
+          type: 'text',
+          required: true,
+        },
+      ],
     },
     {
       name: 'technologies',
