@@ -17,7 +17,12 @@ const AboutMe: CollectionConfig = {
     },
     {
       name: 'description',
-      type: 'richText',
+      type: 'text',
+      required: true,
+    },
+    {
+      name: 'description2',
+      type: 'text',
       required: true,
     },
     {
@@ -30,74 +35,10 @@ const AboutMe: CollectionConfig = {
       name: 'skills',
       type: 'array',
       required: true,
+      label: 'Skills',
       fields: [
         {
-          name: 'category',
-          type: 'text',
-          required: true,
-        },
-        {
-          name: 'items',
-          type: 'array',
-          required: true,
-          fields: [
-            {
-              name: 'skill',
-              type: 'text',
-              required: true,
-            },
-            {
-              name: 'proficiency',
-              type: 'select',
-              required: true,
-              options: [
-                {
-                  label: 'Beginner',
-                  value: 'beginner',
-                },
-                {
-                  label: 'Intermediate',
-                  value: 'intermediate',
-                },
-                {
-                  label: 'Advanced',
-                  value: 'advanced',
-                },
-                {
-                  label: 'Expert',
-                  value: 'expert',
-                },
-              ],
-            },
-          ],
-        },
-      ],
-    },
-    {
-      name: 'socialLinks',
-      type: 'array',
-      fields: [
-        {
-          name: 'platform',
-          type: 'select',
-          required: true,
-          options: [
-            {
-              label: 'GitHub',
-              value: 'github',
-            },
-            {
-              label: 'LinkedIn',
-              value: 'linkedin',
-            },
-            {
-              label: 'Twitter',
-              value: 'twitter',
-            },
-          ],
-        },
-        {
-          name: 'url',
+          name: 'skill',
           type: 'text',
           required: true,
         },
