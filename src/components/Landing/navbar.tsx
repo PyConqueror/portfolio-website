@@ -30,7 +30,7 @@ export default function Navbar() {
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold tracking-tighter">
-          <span className="text-ultra-orange">ULTRA</span>FOLIO
+          <span className="text-ultra-orange">WAN  </span>AQIM
         </Link>
 
         <nav className="hidden md:flex items-center space-x-8">
