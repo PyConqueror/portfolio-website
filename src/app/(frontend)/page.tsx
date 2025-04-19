@@ -7,6 +7,10 @@ import ProjectsSection from '@/components/Landing/projects-section'
 import GallerySection from '@/components/Landing/gallery-section'
 import ResumeSection from '@/components/Landing/resume-section'
 import Footer from '@/components/Landing/footer'
+import { getGlobal } from '@/utilities/getGlobals'
+import { SocialLink } from '../../payload-types'
+
+const socialLinks = (await getGlobal('social-links')) as SocialLink
 
 export default function Home() {
   return (
@@ -49,7 +53,7 @@ export default function Home() {
 
       <GallerySection />
 
-      <Footer />
+      <Footer socialLinks={socialLinks} />
     </div>
   )
 }

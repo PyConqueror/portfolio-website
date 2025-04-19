@@ -1,15 +1,15 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import Link from "next/link"
-import { Github, Twitter, Linkedin, Mail } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { ContactForm } from "./contact-form"
+import { useState } from 'react'
+import Link from 'next/link'
+import { Github, Linkedin, Mail } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { ContactForm } from './contact-form'
+import { SocialLink } from '../../payload-types'
 
-export default function Footer() {
+export default function Footer({ socialLinks }: { socialLinks: SocialLink }) {
   const [contactOpen, setContactOpen] = useState(false)
   const currentYear = new Date().getFullYear()
-
   return (
     <footer className="py-12 bg-ultra-black border-t border-ultra-gray">
       <div className="container mx-auto px-4">
@@ -32,19 +32,24 @@ export default function Footer() {
           </div>
 
           <div className="flex items-center space-x-6">
-            <Link href="#" className="text-gray-400 hover:text-ultra-orange transition-colors">
+            <Link
+              href={socialLinks?.github || '#'}
+              className="text-gray-400 hover:text-ultra-orange transition-colors"
+            >
               <Github className="h-5 w-5" />
               <span className="sr-only">GitHub</span>
             </Link>
-            <Link href="#" className="text-gray-400 hover:text-ultra-orange transition-colors">
-              <Twitter className="h-5 w-5" />
-              <span className="sr-only">Twitter</span>
-            </Link>
-            <Link href="#" className="text-gray-400 hover:text-ultra-orange transition-colors">
+            <Link
+              href={socialLinks?.linkedin || '#'}
+              className="text-gray-400 hover:text-ultra-orange transition-colors"
+            >
               <Linkedin className="h-5 w-5" />
               <span className="sr-only">LinkedIn</span>
             </Link>
-            <Link href="#" className="text-gray-400 hover:text-ultra-orange transition-colors">
+            <Link
+              href={socialLinks?.email || '#'}
+              className="text-gray-400 hover:text-ultra-orange transition-colors"
+            >
               <Mail className="h-5 w-5" />
               <span className="sr-only">Email</span>
             </Link>
