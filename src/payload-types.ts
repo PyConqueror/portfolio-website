@@ -113,10 +113,12 @@ export interface Config {
   globals: {
     header: Header;
     footer: Footer;
+    'social-links': SocialLink;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
+    'social-links': SocialLinksSelect<false> | SocialLinksSelect<true>;
   };
   locale: null;
   user: User & {
@@ -1791,6 +1793,27 @@ export interface Footer {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social-links".
+ */
+export interface SocialLink {
+  id: string;
+  /**
+   * Enter your GitHub profile URL
+   */
+  github: string;
+  /**
+   * Enter your LinkedIn profile URL
+   */
+  linkedin: string;
+  /**
+   * Enter your email address with mailto: prefix
+   */
+  email: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1831,6 +1854,18 @@ export interface FooterSelect<T extends boolean = true> {
             };
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "social-links_select".
+ */
+export interface SocialLinksSelect<T extends boolean = true> {
+  github?: T;
+  linkedin?: T;
+  email?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
