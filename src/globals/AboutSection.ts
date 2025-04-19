@@ -1,4 +1,5 @@
 import { GlobalConfig } from 'payload'
+import { revalidateTag } from 'next/cache'
 
 const AboutSection: GlobalConfig = {
   slug: 'about-section',
@@ -36,6 +37,17 @@ const AboutSection: GlobalConfig = {
       ],
     },
   ],
+  hooks: {
+    afterChange: [
+      ({ doc, req: { payload, context } }) => {
+        if (!context.disableRevalidate) {
+          payload.logger.info(`Revalidating about section`)
+          revalidateTag('global_about_section')
+        }
+        return doc
+      },
+    ],
+  },
 }
 
 export default AboutSection
