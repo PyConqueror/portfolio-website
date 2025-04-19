@@ -114,11 +114,13 @@ export interface Config {
     header: Header;
     footer: Footer;
     'social-links': SocialLink;
+    'about-section': AboutSection;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     'social-links': SocialLinksSelect<false> | SocialLinksSelect<true>;
+    'about-section': AboutSectionSelect<false> | AboutSectionSelect<true>;
   };
   locale: null;
   user: User & {
@@ -1814,6 +1816,24 @@ export interface SocialLink {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-section".
+ */
+export interface AboutSection {
+  id: string;
+  'Paragrah 1': string;
+  'Paragrah 2': string;
+  image?: (string | null) | Media;
+  skillsAndExpertise?:
+    | {
+        skill: string;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1866,6 +1886,24 @@ export interface SocialLinksSelect<T extends boolean = true> {
   github?: T;
   linkedin?: T;
   email?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "about-section_select".
+ */
+export interface AboutSectionSelect<T extends boolean = true> {
+  'Paragrah 1'?: T;
+  'Paragrah 2'?: T;
+  image?: T;
+  skillsAndExpertise?:
+    | T
+    | {
+        skill?: T;
+        id?: T;
+      };
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
