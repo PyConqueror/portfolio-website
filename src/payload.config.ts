@@ -23,6 +23,7 @@ import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
 import { SocialLinks } from './globals/SocialLinks'
 import AboutSection from './globals/AboutSection'
+import ProjectsSection from './globals/ProjectsSection'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -82,7 +83,7 @@ export default buildConfig({
     HeroSection,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer, SocialLinks, AboutSection],
+  globals: [Header, Footer, SocialLinks, AboutSection, ProjectsSection],
   plugins: [
     ...plugins,
     // storage-adapter-placeholder
