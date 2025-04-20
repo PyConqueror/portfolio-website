@@ -1,5 +1,6 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
+import { vercelBlobStorage } from '@payloadcms/storage-vercel-blob'
 
 import sharp from 'sharp' // sharp-import
 import path from 'path'
@@ -60,21 +61,18 @@ export default buildConfig({
   db: mongooseAdapter({
     url: process.env.DATABASE_URI || '',
   }),
-  collections: [
-    Media,
-    Categories,
-    Users,
-    Projects,
-    AboutMe,
-    Gallery,
-    HeroSection,
-    Technologies,
-  ],
+  collections: [Media, Categories, Users, Projects, AboutMe, Gallery, HeroSection, Technologies],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [SocialLinks, AboutSection, ProjectsSection, ResumeSection, GallerySection],
   plugins: [
     ...plugins,
-    // storage-adapter-placeholder
+    vercelBlobStorage({
+      enabled: true,
+      collections: {
+        media: true,
+      },
+      token: process.env.BLOB_READ_WRITE_TOKEN,
+    }),
   ],
   secret: process.env.PAYLOAD_SECRET,
   sharp,

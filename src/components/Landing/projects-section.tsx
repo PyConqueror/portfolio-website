@@ -20,7 +20,6 @@ export default function ProjectsSection({
 
   const [currentPage, setCurrentPage] = useState(0)
   const [projectsPerPage, setProjectsPerPage] = useState(3)
-
   // Update projects per page based on screen size
   useEffect(() => {
     const handleResize = () => {
