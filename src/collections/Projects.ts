@@ -11,24 +11,16 @@ const Projects: CollectionConfig = {
   },
   fields: [
     {
-      name: 'name',
+      name: 'title',
       type: 'text',
       required: true,
     },
     {
       name: 'description',
-      type: 'textarea',
+      type: 'text',
       required: true,
     },
-    {
-      name: 'featured',
-      type: 'checkbox',
-      defaultValue: false,
-      label: 'Featured Project',
-      admin: {
-        description: 'Display this project on the home page',
-      },
-    },
+
     {
       name: 'order',
       type: 'number',
