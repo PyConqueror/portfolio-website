@@ -75,7 +75,6 @@ export interface Config {
     projects: Project;
     'about-me': AboutMe;
     gallery: Gallery;
-    resume: Resume;
     'hero-section': HeroSection;
     technologies: Technology;
     redirects: Redirect;
@@ -97,7 +96,6 @@ export interface Config {
     projects: ProjectsSelect<false> | ProjectsSelect<true>;
     'about-me': AboutMeSelect<false> | AboutMeSelect<true>;
     gallery: GallerySelect<false> | GallerySelect<true>;
-    resume: ResumeSelect<false> | ResumeSelect<true>;
     'hero-section': HeroSectionSelect<false> | HeroSectionSelect<true>;
     technologies: TechnologiesSelect<false> | TechnologiesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
@@ -118,6 +116,7 @@ export interface Config {
     'social-links': SocialLink;
     'about-section': AboutSection;
     'projects-global': ProjectsGlobal;
+    'resume-section': ResumeSection;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
@@ -125,6 +124,7 @@ export interface Config {
     'social-links': SocialLinksSelect<false> | SocialLinksSelect<true>;
     'about-section': AboutSectionSelect<false> | AboutSectionSelect<true>;
     'projects-global': ProjectsGlobalSelect<false> | ProjectsGlobalSelect<true>;
+    'resume-section': ResumeSectionSelect<false> | ResumeSectionSelect<true>;
   };
   locale: null;
   user: User & {
@@ -807,20 +807,6 @@ export interface Gallery {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "resume".
- */
-export interface Resume {
-  id: string;
-  resumeFile?: (string | null) | Media;
-  /**
-   * URL to external resume page (used if no file is uploaded)
-   */
-  resumeUrl?: string | null;
-  updatedAt: string;
-  createdAt: string;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "hero-section".
  */
 export interface HeroSection {
@@ -1034,10 +1020,6 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'gallery';
         value: string | Gallery;
-      } | null)
-    | ({
-        relationTo: 'resume';
-        value: string | Resume;
       } | null)
     | ({
         relationTo: 'hero-section';
@@ -1447,16 +1429,6 @@ export interface GallerySelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "resume_select".
- */
-export interface ResumeSelect<T extends boolean = true> {
-  resumeFile?: T;
-  resumeUrl?: T;
-  updatedAt?: T;
-  createdAt?: T;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "hero-section_select".
  */
 export interface HeroSectionSelect<T extends boolean = true> {
@@ -1830,6 +1802,16 @@ export interface ProjectsGlobal {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resume-section".
+ */
+export interface ResumeSection {
+  id: string;
+  resumeFile: string | Media;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1902,6 +1884,16 @@ export interface AboutSectionSelect<T extends boolean = true> {
  */
 export interface ProjectsGlobalSelect<T extends boolean = true> {
   selectedProjects?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "resume-section_select".
+ */
+export interface ResumeSectionSelect<T extends boolean = true> {
+  resumeFile?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

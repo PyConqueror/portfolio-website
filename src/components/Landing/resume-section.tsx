@@ -1,12 +1,41 @@
-"use client"
+'use client'
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Download, ExternalLink, Loader2 } from "lucide-react"
+import { useState, useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { Download, Loader2 } from 'lucide-react'
+import { ResumeSection as ResumeSectionType, Media } from '../../payload-types'
 
-export default function ResumeSection() {
+declare global {
+  interface Window {
+    PDFObject: any
+  }
+}
+
+export default function ResumeSection({
+  resumeSectionData,
+}: {
+  resumeSectionData: ResumeSectionType
+}) {
   const [isLoading, setIsLoading] = useState(true)
-  const resumeUrl = "https://pyconqueror.github.io/resume/"
+  const resume = resumeSectionData.resumeFile as Media
+
+  useEffect(() => {
+    const script = document.createElement('script')
+    script.src = 'https://unpkg.com/pdfobject'
+    script.async = true
+    document.body.appendChild(script)
+
+    script.onload = () => {
+      if (window.PDFObject) {
+        window.PDFObject.embed(resume.url as string, '#pdf-viewer')
+        setIsLoading(false)
+      }
+    }
+
+    return () => {
+      document.body.removeChild(script)
+    }
+  }, [resume.url])
 
   return (
     <section id="resume" className="py-24 bg-ultra-gray-dark">
@@ -15,18 +44,13 @@ export default function ResumeSection() {
           <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4">
             <span className="text-ultra-orange">Resume</span>
           </h2>
-          <p className="text-gray-400 text-lg">My professional experience, skills, and qualifications.</p>
+          <p className="text-gray-400 text-lg">
+            My professional experience, skills, and qualifications.
+          </p>
           <div className="flex justify-center gap-4 mt-6">
             <Button
-              variant="outline"
-              className="rounded-full border-ultra-gray hover:bg-ultra-orange hover:text-black hover:border-ultra-orange transition-all duration-300"
-              onClick={() => window.open(resumeUrl, "_blank")}
-            >
-              <ExternalLink className="mr-2 h-4 w-4" /> View Full Page
-            </Button>
-            <Button
               className="rounded-full bg-ultra-orange hover:bg-ultra-orange/90 text-black transition-all duration-300"
-              onClick={() => window.open(resumeUrl, "_blank")}
+              onClick={() => window.open(resume.url as string, '_blank')}
             >
               <Download className="mr-2 h-4 w-4" /> Download Resume
             </Button>
@@ -40,16 +64,7 @@ export default function ResumeSection() {
               <Loader2 className="h-8 w-8 animate-spin text-ultra-orange" />
             </div>
           )}
-          <div className="aspect-[8.5/11] w-full">
-            <iframe
-              src={resumeUrl}
-              className="w-full h-full"
-              onLoad={() => setIsLoading(false)}
-              title="Resume"
-              sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
-              loading="lazy"
-            />
-          </div>
+          <div id="pdf-viewer" className="aspect-[8.5/11] w-full"></div>
         </div>
       </div>
     </section>

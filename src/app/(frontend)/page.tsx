@@ -8,10 +8,16 @@ import GallerySection from '@/components/Landing/gallery-section'
 import ResumeSection from '@/components/Landing/resume-section'
 import Footer from '@/components/Landing/footer'
 import { getGlobal } from '@/utilities/getGlobals'
-import { SocialLink, AboutSection as AboutSectionType, ProjectsGlobal } from '../../payload-types'
+import {
+  SocialLink,
+  AboutSection as AboutSectionType,
+  ProjectsGlobal,
+  ResumeSection as ResumeSectionType,
+} from '../../payload-types'
 const socialLinks = (await getGlobal('social-links')) as SocialLink
 const aboutSectionData = (await getGlobal('about-section')) as AboutSectionType
 const projectsSectionData = (await getGlobal('projects-global')) as ProjectsGlobal
+const resumeSectionData = (await getGlobal('resume-section')) as ResumeSectionType
 
 export default function Home() {
   return (
@@ -50,7 +56,7 @@ export default function Home() {
 
       <ProjectsSection projectSectionData={projectsSectionData} />
 
-      <ResumeSection />
+      <ResumeSection resumeSectionData={resumeSectionData} />
 
       <GallerySection />
 

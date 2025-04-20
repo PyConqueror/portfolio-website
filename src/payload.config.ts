@@ -14,7 +14,6 @@ import { Users } from './collections/Users'
 import Projects from './collections/Projects'
 import AboutMe from './collections/AboutMe'
 import Gallery from './collections/Gallery'
-import Resume from './collections/Resume'
 import HeroSection from './collections/HeroSection'
 import { Footer } from './Footer/config'
 import { Header } from './Header/config'
@@ -25,6 +24,7 @@ import { SocialLinks } from './globals/SocialLinks'
 import AboutSection from './globals/AboutSection'
 import ProjectsSection from './globals/ProjectsSection'
 import Technologies from './collections/Technologies'
+import ResumeSection from './globals/ResumeSection'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -80,12 +80,11 @@ export default buildConfig({
     Projects,
     AboutMe,
     Gallery,
-    Resume,
     HeroSection,
     Technologies,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer, SocialLinks, AboutSection, ProjectsSection],
+  globals: [Header, Footer, SocialLinks, AboutSection, ProjectsSection, ResumeSection],
   plugins: [
     ...plugins,
     // storage-adapter-placeholder
