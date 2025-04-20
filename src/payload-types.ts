@@ -117,6 +117,7 @@ export interface Config {
     'about-section': AboutSection;
     'projects-global': ProjectsGlobal;
     'resume-section': ResumeSection;
+    'gallery-global': GalleryGlobal;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
@@ -125,6 +126,7 @@ export interface Config {
     'about-section': AboutSectionSelect<false> | AboutSectionSelect<true>;
     'projects-global': ProjectsGlobalSelect<false> | ProjectsGlobalSelect<true>;
     'resume-section': ResumeSectionSelect<false> | ResumeSectionSelect<true>;
+    'gallery-global': GalleryGlobalSelect<false> | GalleryGlobalSelect<true>;
   };
   locale: null;
   user: User & {
@@ -1812,6 +1814,16 @@ export interface ResumeSection {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-global".
+ */
+export interface GalleryGlobal {
+  id: string;
+  selectedGalleries: (string | Gallery)[];
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1894,6 +1906,16 @@ export interface ProjectsGlobalSelect<T extends boolean = true> {
  */
 export interface ResumeSectionSelect<T extends boolean = true> {
   resumeFile?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "gallery-global_select".
+ */
+export interface GalleryGlobalSelect<T extends boolean = true> {
+  selectedGalleries?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

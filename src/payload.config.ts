@@ -25,6 +25,7 @@ import AboutSection from './globals/AboutSection'
 import ProjectsSection from './globals/ProjectsSection'
 import Technologies from './collections/Technologies'
 import ResumeSection from './globals/ResumeSection'
+import GallerySection from './globals/GallerySection'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -84,7 +85,15 @@ export default buildConfig({
     Technologies,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, Footer, SocialLinks, AboutSection, ProjectsSection, ResumeSection],
+  globals: [
+    Header,
+    Footer,
+    SocialLinks,
+    AboutSection,
+    ProjectsSection,
+    ResumeSection,
+    GallerySection,
+  ],
   plugins: [
     ...plugins,
     // storage-adapter-placeholder

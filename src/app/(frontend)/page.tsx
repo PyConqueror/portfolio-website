@@ -13,11 +13,13 @@ import {
   AboutSection as AboutSectionType,
   ProjectsGlobal,
   ResumeSection as ResumeSectionType,
+  GalleryGlobal,
 } from '../../payload-types'
 const socialLinks = (await getGlobal('social-links')) as SocialLink
 const aboutSectionData = (await getGlobal('about-section')) as AboutSectionType
 const projectsSectionData = (await getGlobal('projects-global')) as ProjectsGlobal
 const resumeSectionData = (await getGlobal('resume-section')) as ResumeSectionType
+const gallerySectionData = (await getGlobal('gallery-global')) as GalleryGlobal
 
 export default function Home() {
   return (
@@ -58,7 +60,7 @@ export default function Home() {
 
       <ResumeSection resumeSectionData={resumeSectionData} />
 
-      <GallerySection />
+      <GallerySection gallerySectionData={gallerySectionData} />
 
       <Footer socialLinks={socialLinks} />
     </div>
