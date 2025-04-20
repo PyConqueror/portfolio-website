@@ -8,8 +8,6 @@ import { fileURLToPath } from 'url'
 
 import { Categories } from './collections/Categories'
 import { Media } from './collections/Media'
-import { Pages } from './collections/Pages'
-import { Posts } from './collections/Posts'
 import { Users } from './collections/Users'
 import Projects from './collections/Projects'
 import AboutMe from './collections/AboutMe'
@@ -63,8 +61,6 @@ export default buildConfig({
     url: process.env.DATABASE_URI || '',
   }),
   collections: [
-    Pages,
-    Posts,
     Media,
     Categories,
     Users,
