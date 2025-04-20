@@ -77,7 +77,7 @@ export function ContactForm({ open, onOpenChange }: ContactFormProps) {
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">Get in touch</DialogTitle>
           <DialogDescription className="text-gray-400">
-            Fill out the form below and I'll get back to you as soon as possible.
+            Fill out the form below and I&apos;ll get back to you as soon as possible.
           </DialogDescription>
         </DialogHeader>
 
@@ -85,7 +85,7 @@ export function ContactForm({ open, onOpenChange }: ContactFormProps) {
           <div className="flex flex-col items-center justify-center py-10 space-y-4">
             <CheckCircle2 className="h-16 w-16 text-ultra-orange" />
             <h3 className="text-xl font-medium">Message sent successfully!</h3>
-            <p className="text-gray-400 text-center">Thanks for reaching out. I'll get back to you soon.</p>
+            <p className="text-gray-400 text-center">Thanks for reaching out. I&apos;ll get back to you soon.</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
