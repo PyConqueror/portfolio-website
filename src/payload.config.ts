@@ -15,7 +15,6 @@ import Projects from './collections/Projects'
 import AboutMe from './collections/AboutMe'
 import Gallery from './collections/Gallery'
 import HeroSection from './collections/HeroSection'
-import { Footer } from './Footer/config'
 import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
@@ -32,7 +31,6 @@ const dirname = path.dirname(filename)
 
 export default buildConfig({
   admin: {
-
     importMap: {
       baseDir: path.resolve(dirname),
     },
@@ -78,15 +76,7 @@ export default buildConfig({
     Technologies,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [
-    Header,
-    Footer,
-    SocialLinks,
-    AboutSection,
-    ProjectsSection,
-    ResumeSection,
-    GallerySection,
-  ],
+  globals: [Header, SocialLinks, AboutSection, ProjectsSection, ResumeSection, GallerySection],
   plugins: [
     ...plugins,
     // storage-adapter-placeholder
