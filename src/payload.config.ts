@@ -24,6 +24,7 @@ import { getServerSideURL } from './utilities/getURL'
 import { SocialLinks } from './globals/SocialLinks'
 import AboutSection from './globals/AboutSection'
 import ProjectsSection from './globals/ProjectsSection'
+import Technologies from './collections/Technologies'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -81,6 +82,7 @@ export default buildConfig({
     Gallery,
     Resume,
     HeroSection,
+    Technologies,
   ],
   cors: [getServerSideURL()].filter(Boolean),
   globals: [Header, Footer, SocialLinks, AboutSection, ProjectsSection],

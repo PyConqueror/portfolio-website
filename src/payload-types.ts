@@ -77,6 +77,7 @@ export interface Config {
     gallery: Gallery;
     resume: Resume;
     'hero-section': HeroSection;
+    technologies: Technology;
     redirects: Redirect;
     forms: Form;
     'form-submissions': FormSubmission;
@@ -98,6 +99,7 @@ export interface Config {
     gallery: GallerySelect<false> | GallerySelect<true>;
     resume: ResumeSelect<false> | ResumeSelect<true>;
     'hero-section': HeroSectionSelect<false> | HeroSectionSelect<true>;
+    technologies: TechnologiesSelect<false> | TechnologiesSelect<true>;
     redirects: RedirectsSelect<false> | RedirectsSelect<true>;
     forms: FormsSelect<false> | FormsSelect<true>;
     'form-submissions': FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
@@ -758,10 +760,17 @@ export interface Project {
   demoUrl?: string | null;
   githubUrl?: string | null;
   image: string | Media;
-  tags: {
-    tag: string;
-    id?: string | null;
-  }[];
+  tags: (string | Technology)[];
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "technologies".
+ */
+export interface Technology {
+  id: string;
+  name: string;
   updatedAt: string;
   createdAt: string;
 }
@@ -1037,6 +1046,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'hero-section';
         value: string | HeroSection;
+      } | null)
+    | ({
+        relationTo: 'technologies';
+        value: string | Technology;
       } | null)
     | ({
         relationTo: 'redirects';
@@ -1406,12 +1419,7 @@ export interface ProjectsSelect<T extends boolean = true> {
   demoUrl?: T;
   githubUrl?: T;
   image?: T;
-  tags?:
-    | T
-    | {
-        tag?: T;
-        id?: T;
-      };
+  tags?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1465,6 +1473,15 @@ export interface HeroSectionSelect<T extends boolean = true> {
   title?: T;
   subtitle?: T;
   backgroundImage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "technologies_select".
+ */
+export interface TechnologiesSelect<T extends boolean = true> {
+  name?: T;
   updatedAt?: T;
   createdAt?: T;
 }
