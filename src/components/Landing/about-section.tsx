@@ -1,10 +1,8 @@
 import Image from 'next/image'
 import { Badge } from '@/components/ui/badge'
 import type { AboutSection as AboutSectionType } from '../../payload-types'
-import { fetchMedia } from '@/utilities/fetchMedia'
 
 export default async function AboutSection({ aboutSectionData }: { aboutSectionData: AboutSectionType }) {
-  const image = await fetchMedia(aboutSectionData.image as string)
 
   return (
     <section id="about" className="py-24 bg-ultra-gray-dark">
@@ -15,7 +13,7 @@ export default async function AboutSection({ aboutSectionData }: { aboutSectionD
               <div className="absolute inset-0 bg-gradient-to-br from-ultra-gray to-ultra-black rounded-2xl transform rotate-3"></div>
               <div className="absolute inset-0 border-2 border-ultra-orange/20 rounded-2xl transform rotate-3"></div>
               <Image
-                src={image.url}
+                src={aboutSectionData.image as string}
                 alt="Profile"
                 width={400}
                 height={400}

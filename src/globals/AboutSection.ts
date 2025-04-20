@@ -1,5 +1,6 @@
 import { GlobalConfig } from 'payload'
 import { revalidateTag } from 'next/cache'
+import { PayloadRequest } from 'payload'
 
 const AboutSection: GlobalConfig = {
   slug: 'about-section',
@@ -43,6 +44,18 @@ const AboutSection: GlobalConfig = {
         if (!context.disableRevalidate) {
           payload.logger.info(`Revalidating about section`)
           revalidateTag('global_about_section')
+        }
+        return doc
+      },
+    ],
+    afterRead: [
+      async ({ doc, req }: { doc: any; req: PayloadRequest }) => {
+        if (doc.image) {
+          const media = await req.payload.findByID({
+            collection: 'media',
+            id: doc.image,
+          })
+          doc.image = media.url
         }
         return doc
       },
