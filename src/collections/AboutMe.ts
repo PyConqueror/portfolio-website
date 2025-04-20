@@ -3,46 +3,37 @@ import { CollectionConfig } from 'payload'
 const AboutMe: CollectionConfig = {
   slug: 'about-me',
   admin: {
-    useAsTitle: 'title',
+    useAsTitle: 'Paragrah 1',
   },
   access: {
     read: () => true,
   },
   fields: [
     {
-      name: 'title',
+      name: 'Paragrah 1',
       type: 'text',
-      required: true,
-      defaultValue: 'About Me',
-    },
-    {
-      name: 'description',
-      type: 'text',
+      label: 'Paragrah 1',
       required: true,
     },
     {
-      name: 'description2',
+      name: 'Paragrah 2',
       type: 'text',
+      label: 'Paragrah 2',
       required: true,
     },
     {
-      name: 'profileImage',
+      name: 'image',
       type: 'upload',
       relationTo: 'media',
-      required: true,
+      label: 'Image',
     },
     {
-      name: 'skills',
-      type: 'array',
+      name: 'skillsAndExpertise',
+      type: 'relationship',
+      relationTo: 'technologies',
+      hasMany: true,
       required: true,
-      label: 'Skills',
-      fields: [
-        {
-          name: 'skill',
-          type: 'text',
-          required: true,
-        },
-      ],
+      label: 'Skills & Expertise',
     },
   ],
   timestamps: true,
