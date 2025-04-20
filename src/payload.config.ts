@@ -15,7 +15,6 @@ import Projects from './collections/Projects'
 import AboutMe from './collections/AboutMe'
 import Gallery from './collections/Gallery'
 import HeroSection from './collections/HeroSection'
-import { Header } from './Header/config'
 import { plugins } from './plugins'
 import { defaultLexical } from '@/fields/defaultLexical'
 import { getServerSideURL } from './utilities/getURL'
@@ -76,7 +75,7 @@ export default buildConfig({
     Technologies,
   ],
   cors: [getServerSideURL()].filter(Boolean),
-  globals: [Header, SocialLinks, AboutSection, ProjectsSection, ResumeSection, GallerySection],
+  globals: [SocialLinks, AboutSection, ProjectsSection, ResumeSection, GallerySection],
   plugins: [
     ...plugins,
     // storage-adapter-placeholder

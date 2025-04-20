@@ -111,7 +111,6 @@ export interface Config {
     defaultIDType: string;
   };
   globals: {
-    header: Header;
     'social-links': SocialLink;
     'about-section': AboutSection;
     'projects-global': ProjectsGlobal;
@@ -119,7 +118,6 @@ export interface Config {
     'gallery-global': GalleryGlobal;
   };
   globalsSelect: {
-    header: HeaderSelect<false> | HeaderSelect<true>;
     'social-links': SocialLinksSelect<false> | SocialLinksSelect<true>;
     'about-section': AboutSectionSelect<false> | AboutSectionSelect<true>;
     'projects-global': ProjectsGlobalSelect<false> | ProjectsGlobalSelect<true>;
@@ -1638,35 +1636,6 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "header".
- */
-export interface Header {
-  id: string;
-  navItems?:
-    | {
-        link: {
-          type?: ('reference' | 'custom') | null;
-          newTab?: boolean | null;
-          reference?:
-            | ({
-                relationTo: 'pages';
-                value: string | Page;
-              } | null)
-            | ({
-                relationTo: 'posts';
-                value: string | Post;
-              } | null);
-          url?: string | null;
-          label: string;
-        };
-        id?: string | null;
-      }[]
-    | null;
-  updatedAt?: string | null;
-  createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "social-links".
  */
 export interface SocialLink {
@@ -1725,29 +1694,6 @@ export interface GalleryGlobal {
   selectedGalleries: (string | Gallery)[];
   updatedAt?: string | null;
   createdAt?: string | null;
-}
-/**
- * This interface was referenced by `Config`'s JSON-Schema
- * via the `definition` "header_select".
- */
-export interface HeaderSelect<T extends boolean = true> {
-  navItems?:
-    | T
-    | {
-        link?:
-          | T
-          | {
-              type?: T;
-              newTab?: T;
-              reference?: T;
-              url?: T;
-              label?: T;
-            };
-        id?: T;
-      };
-  updatedAt?: T;
-  createdAt?: T;
-  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
