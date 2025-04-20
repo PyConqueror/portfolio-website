@@ -780,14 +780,10 @@ export interface Technology {
  */
 export interface AboutMe {
   id: string;
-  title: string;
-  description: string;
-  description2: string;
-  profileImage: string | Media;
-  skills: {
-    skill: string;
-    id?: string | null;
-  }[];
+  'Paragrah 1': string;
+  'Paragrah 2': string;
+  image?: (string | null) | Media;
+  skillsAndExpertise: (string | Technology)[];
   updatedAt: string;
   createdAt: string;
 }
@@ -1428,16 +1424,10 @@ export interface ProjectsSelect<T extends boolean = true> {
  * via the `definition` "about-me_select".
  */
 export interface AboutMeSelect<T extends boolean = true> {
-  title?: T;
-  description?: T;
-  description2?: T;
-  profileImage?: T;
-  skills?:
-    | T
-    | {
-        skill?: T;
-        id?: T;
-      };
+  'Paragrah 1'?: T;
+  'Paragrah 2'?: T;
+  image?: T;
+  skillsAndExpertise?: T;
   updatedAt?: T;
   createdAt?: T;
 }
@@ -1824,15 +1814,7 @@ export interface SocialLink {
  */
 export interface AboutSection {
   id: string;
-  'Paragrah 1': string;
-  'Paragrah 2': string;
-  image?: (string | null) | Media;
-  skillsAndExpertise?:
-    | {
-        skill: string;
-        id?: string | null;
-      }[]
-    | null;
+  aboutMe: string | AboutMe;
   updatedAt?: string | null;
   createdAt?: string | null;
 }
@@ -1909,15 +1891,7 @@ export interface SocialLinksSelect<T extends boolean = true> {
  * via the `definition` "about-section_select".
  */
 export interface AboutSectionSelect<T extends boolean = true> {
-  'Paragrah 1'?: T;
-  'Paragrah 2'?: T;
-  image?: T;
-  skillsAndExpertise?:
-    | T
-    | {
-        skill?: T;
-        id?: T;
-      };
+  aboutMe?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;

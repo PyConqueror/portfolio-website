@@ -5,37 +5,17 @@ import { PayloadRequest } from 'payload'
 const AboutSection: GlobalConfig = {
   slug: 'about-section',
   label: 'About Section',
+  access: {
+    read: () => true,
+  },
   fields: [
     {
-      name: 'Paragrah 1',
-      type: 'text',
-      label: 'Paragrah 1',
+      name: 'aboutMe',
+      type: 'relationship',
+      relationTo: 'about-me',
+      hasMany: false,
       required: true,
-    },
-    {
-      name: 'Paragrah 2',
-      type: 'text',
-      label: 'Paragrah 2',
-      required: true,
-    },
-    {
-      name: 'image',
-      type: 'upload',
-      relationTo: 'media',
-      label: 'Image',
-    },
-    {
-      name: 'skillsAndExpertise',
-      type: 'array',
-      label: 'Skills & Expertise',
-      fields: [
-        {
-          name: 'skill',
-          type: 'text',
-          label: 'Skill',
-          required: true,
-        },
-      ],
+      label: 'About Me',
     },
   ],
   hooks: {
@@ -50,12 +30,12 @@ const AboutSection: GlobalConfig = {
     ],
     afterRead: [
       async ({ doc, req }: { doc: any; req: PayloadRequest }) => {
-        if (doc.image) {
-          const media = await req.payload.findByID({
-            collection: 'media',
-            id: doc.image,
+        if (doc.aboutMe) {
+          const aboutMe = await req.payload.findByID({
+            collection: 'about-me',
+            id: doc.aboutMe,
           })
-          doc.image = media.url
+          doc.aboutMe = aboutMe
         }
         return doc
       },
