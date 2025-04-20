@@ -1,15 +1,25 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { ArrowUpRight, Github, ChevronLeft, ChevronRight } from "lucide-react"
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { useMobile } from "@/hooks/use-mobile"
+import { useState, useEffect } from 'react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { ArrowUpRight, Github, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Card, CardContent } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { useMobile } from '@/hooks/use-mobile'
+import { ProjectsGlobal, Project, Media } from '@/payload-types'
 
-export default function ProjectsSection() {
+function isProject(item: string | Project): item is Project {
+  return (item as Project).title !== undefined
+}
+
+export default function ProjectsSection({
+  projectSectionData,
+}: {
+  projectSectionData: ProjectsGlobal
+}) {
   const isMobile = useMobile()
+
   const [currentPage, setCurrentPage] = useState(0)
   const [projectsPerPage, setProjectsPerPage] = useState(3)
 
@@ -26,66 +36,11 @@ export default function ProjectsSection() {
     }
 
     handleResize()
-    window.addEventListener("resize", handleResize)
-    return () => window.removeEventListener("resize", handleResize)
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
-  const projects = [
-    {
-      id: 1,
-      title: "Digital Experience Platform",
-      description: "A comprehensive platform for creating immersive digital experiences with real-time analytics.",
-      image: "/placeholder.svg?height=300&width=600",
-      tags: ["Next.js", "React", "Node.js"],
-      demoUrl: "#",
-      githubUrl: "#",
-    },
-    {
-      id: 2,
-      title: "E-Commerce Solution",
-      description: "A modern e-commerce platform with seamless checkout and inventory management.",
-      image: "/placeholder.svg?height=300&width=600",
-      tags: ["React", "Stripe", "Tailwind"],
-      demoUrl: "#",
-      githubUrl: "#",
-    },
-    {
-      id: 3,
-      title: "AI Content Generator",
-      description: "An AI-powered tool that helps create engaging content for various platforms.",
-      image: "/placeholder.svg?height=300&width=600",
-      tags: ["Python", "TensorFlow", "React"],
-      demoUrl: "#",
-      githubUrl: "#",
-    },
-    {
-      id: 4,
-      title: "Portfolio Generator",
-      description: "A tool that helps professionals create stunning portfolios without coding knowledge.",
-      image: "/placeholder.svg?height=300&width=600",
-      tags: ["Vue.js", "Firebase", "SCSS"],
-      demoUrl: "#",
-      githubUrl: "#",
-    },
-    {
-      id: 5,
-      title: "Blockchain Explorer",
-      description: "A comprehensive tool for exploring and analyzing blockchain transactions and data.",
-      image: "/placeholder.svg?height=300&width=600",
-      tags: ["Web3.js", "React", "GraphQL"],
-      demoUrl: "#",
-      githubUrl: "#",
-    },
-    {
-      id: 6,
-      title: "Smart Home Dashboard",
-      description: "An intuitive dashboard for controlling and monitoring smart home devices.",
-      image: "/placeholder.svg?height=300&width=600",
-      tags: ["IoT", "React", "Node.js"],
-      demoUrl: "#",
-      githubUrl: "#",
-    },
-  ]
+  const projects = projectSectionData.selectedProjects
 
   const totalPages = Math.ceil(projects.length / projectsPerPage)
 
@@ -97,7 +52,9 @@ export default function ProjectsSection() {
     setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : 0))
   }
 
-  const visibleProjects = projects.slice(currentPage * projectsPerPage, (currentPage + 1) * projectsPerPage)
+  const visibleProjects = projects
+    .filter(isProject)
+    .slice(currentPage * projectsPerPage, (currentPage + 1) * projectsPerPage)
 
   return (
     <section id="projects" className="py-24 bg-ultra-black">
@@ -134,7 +91,7 @@ export default function ProjectsSection() {
                 <div className="relative h-48 overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-t from-ultra-black/80 to-transparent z-10"></div>
                   <Image
-                    src={project.image || "/placeholder.svg"}
+                    src={(project.image as Media).url || '/placeholder.svg'}
                     alt={project.title}
                     width={600}
                     height={300}
@@ -146,11 +103,14 @@ export default function ProjectsSection() {
                   <p className="text-gray-400 mb-4">{project.description}</p>
 
                   <div className="flex flex-wrap gap-2 mb-6">
-                    {project.tags.map((tag) => (
-                      <span key={tag} className="text-xs bg-ultra-gray px-2 py-1 rounded-full">
-                        {tag}
-                      </span>
-                    ))}
+                    {project.tags.map((tag) => {
+                      if (typeof tag === 'string') return null
+                      return (
+                        <span key={tag.id} className="text-xs bg-ultra-gray px-2 py-1 rounded-full">
+                          {tag.name}
+                        </span>
+                      )
+                    })}
                   </div>
 
                   <div className="flex items-center gap-3">
@@ -160,7 +120,7 @@ export default function ProjectsSection() {
                       size="sm"
                       className="rounded-full border-ultra-gray hover:bg-ultra-orange hover:text-black hover:border-ultra-orange"
                     >
-                      <Link href={project.demoUrl}>
+                      <Link href={project.demoUrl || ''}>
                         <ArrowUpRight className="mr-1 h-4 w-4" /> Demo
                       </Link>
                     </Button>
@@ -170,7 +130,7 @@ export default function ProjectsSection() {
                       size="sm"
                       className="rounded-full border-ultra-gray hover:bg-ultra-orange hover:text-black hover:border-ultra-orange"
                     >
-                      <Link href={project.githubUrl}>
+                      <Link href={project.githubUrl || ''}>
                         <Github className="mr-1 h-4 w-4" /> Code
                       </Link>
                     </Button>
@@ -199,7 +159,7 @@ export default function ProjectsSection() {
             <button
               key={index}
               className={`w-2 h-2 rounded-full transition-all ${
-                currentPage === index ? "bg-ultra-orange w-4" : "bg-ultra-gray"
+                currentPage === index ? 'bg-ultra-orange w-4' : 'bg-ultra-gray'
               }`}
               onClick={() => setCurrentPage(index)}
               aria-label={`Go to page ${index + 1}`}
