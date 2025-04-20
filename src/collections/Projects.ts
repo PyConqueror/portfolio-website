@@ -3,7 +3,7 @@ import { CollectionConfig } from 'payload'
 const Projects: CollectionConfig = {
   slug: 'projects',
   admin: {
-    useAsTitle: 'name',
+    useAsTitle: 'title',
     defaultColumns: ['name', 'type', 'featured', 'updatedAt'],
   },
   access: {
@@ -49,27 +49,11 @@ const Projects: CollectionConfig = {
     },
     {
       name: 'tags',
-      type: 'array',
+      type: 'relationship',
+      relationTo: 'technologies',
+      hasMany: true,
       required: true,
-      fields: [
-        {
-          name: 'tag',
-          type: 'text',
-          required: true,
-        },
-      ],
-    },
-    {
-      name: 'technologies',
-      type: 'array',
-      required: true,
-      fields: [
-        {
-          name: 'technology',
-          type: 'text',
-          required: true,
-        },
-      ],
+      label: 'Technologies',
     },
   ],
   timestamps: true,
