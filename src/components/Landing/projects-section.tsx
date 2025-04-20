@@ -6,7 +6,6 @@ import Link from 'next/link'
 import { ArrowUpRight, Github, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { useMobile } from '@/hooks/use-mobile'
 import { ProjectsGlobal, Project, Media } from '@/payload-types'
 
 function isProject(item: string | Project): item is Project {
@@ -18,7 +17,6 @@ export default function ProjectsSection({
 }: {
   projectSectionData: ProjectsGlobal
 }) {
-  const isMobile = useMobile()
 
   const [currentPage, setCurrentPage] = useState(0)
   const [projectsPerPage, setProjectsPerPage] = useState(3)

@@ -5,7 +5,6 @@ import Image from 'next/image'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useMobile } from '@/hooks/use-mobile'
 import { GalleryGlobal as GalleryGlobalType, Media, Gallery as GalleryType } from '@/payload-types'
 
 export default function GallerySection({
@@ -13,7 +12,6 @@ export default function GallerySection({
 }: {
   gallerySectionData: GalleryGlobalType
 }) {
-  const isMobile = useMobile()
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
   const [currentPage, setCurrentPage] = useState(0)
   const [imagesPerPage, setImagesPerPage] = useState(gallerySectionData.selectedGalleries.length)
