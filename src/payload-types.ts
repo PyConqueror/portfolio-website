@@ -115,12 +115,14 @@ export interface Config {
     footer: Footer;
     'social-links': SocialLink;
     'about-section': AboutSection;
+    'projects-global': ProjectsGlobal;
   };
   globalsSelect: {
     header: HeaderSelect<false> | HeaderSelect<true>;
     footer: FooterSelect<false> | FooterSelect<true>;
     'social-links': SocialLinksSelect<false> | SocialLinksSelect<true>;
     'about-section': AboutSectionSelect<false> | AboutSectionSelect<true>;
+    'projects-global': ProjectsGlobalSelect<false> | ProjectsGlobalSelect<true>;
   };
   locale: null;
   user: User & {
@@ -747,12 +749,8 @@ export interface Form {
  */
 export interface Project {
   id: string;
-  name: string;
+  title: string;
   description: string;
-  /**
-   * Display this project on the home page
-   */
-  featured?: boolean | null;
   /**
    * Display order (lower numbers appear first)
    */
@@ -762,10 +760,6 @@ export interface Project {
   image: string | Media;
   tags: {
     tag: string;
-    id?: string | null;
-  }[];
-  technologies: {
-    technology: string;
     id?: string | null;
   }[];
   updatedAt: string;
@@ -1406,9 +1400,8 @@ export interface UsersSelect<T extends boolean = true> {
  * via the `definition` "projects_select".
  */
 export interface ProjectsSelect<T extends boolean = true> {
-  name?: T;
+  title?: T;
   description?: T;
-  featured?: T;
   order?: T;
   demoUrl?: T;
   githubUrl?: T;
@@ -1417,12 +1410,6 @@ export interface ProjectsSelect<T extends boolean = true> {
     | T
     | {
         tag?: T;
-        id?: T;
-      };
-  technologies?:
-    | T
-    | {
-        technology?: T;
         id?: T;
       };
   updatedAt?: T;
@@ -1834,6 +1821,16 @@ export interface AboutSection {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects-global".
+ */
+export interface ProjectsGlobal {
+  id: string;
+  selectedProjects: (string | Project)[];
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "header_select".
  */
 export interface HeaderSelect<T extends boolean = true> {
@@ -1904,6 +1901,16 @@ export interface AboutSectionSelect<T extends boolean = true> {
         skill?: T;
         id?: T;
       };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects-global_select".
+ */
+export interface ProjectsGlobalSelect<T extends boolean = true> {
+  selectedProjects?: T;
   updatedAt?: T;
   createdAt?: T;
   globalType?: T;
