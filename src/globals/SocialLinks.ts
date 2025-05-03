@@ -1,5 +1,5 @@
 import { GlobalConfig } from 'payload'
-import { revalidateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 
 export const SocialLinks: GlobalConfig = {
   slug: 'social-links',
@@ -40,7 +40,7 @@ export const SocialLinks: GlobalConfig = {
       ({ doc, req: { payload, context } }) => {
         if (!context.disableRevalidate) {
           payload.logger.info(`Revalidating Social Links`)
-          revalidateTag('global_social_links')
+          revalidatePath('/')
         }
         return doc
       },

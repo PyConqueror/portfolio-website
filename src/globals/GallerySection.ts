@@ -1,5 +1,6 @@
 import { GlobalConfig } from 'payload'
-import { revalidateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
+// import { revalidateTag } from 'next/cache'
 import { PayloadRequest } from 'payload'
 
 const GallerySection: GlobalConfig = {
@@ -23,7 +24,8 @@ const GallerySection: GlobalConfig = {
       ({ doc, req: { payload, context } }) => {
         if (!context.disableRevalidate) {
           payload.logger.info(`Revalidating Gallery Section`)
-          revalidateTag('global_gallery_section')
+          // revalidateTag('global_gallery_section')
+          revalidatePath('/')
         }
         return doc
       },

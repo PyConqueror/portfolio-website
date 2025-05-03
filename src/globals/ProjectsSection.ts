@@ -1,5 +1,6 @@
 import { GlobalConfig } from 'payload'
-import { revalidateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
+// import { revalidateTag } from 'next/cache'
 import { PayloadRequest } from 'payload'
 
 const ProjectsSection: GlobalConfig = {
@@ -23,7 +24,8 @@ const ProjectsSection: GlobalConfig = {
       ({ doc, req: { payload, context } }) => {
         if (!context.disableRevalidate) {
           payload.logger.info(`Revalidating Projects Section`)
-          revalidateTag('global_projects_section')
+          // revalidateTag('global_projects_section')
+          revalidatePath('/')
         }
         return doc
       },
