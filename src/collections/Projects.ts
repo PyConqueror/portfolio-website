@@ -4,7 +4,7 @@ const Projects: CollectionConfig = {
   slug: 'projects',
   admin: {
     useAsTitle: 'title',
-    defaultColumns: ['name', 'type', 'featured', 'updatedAt'],
+    defaultColumns: ['title', 'type', 'featured', 'updatedAt'],
   },
   access: {
     read: () => true,
