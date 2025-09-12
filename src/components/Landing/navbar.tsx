@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { Menu, X } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
-import { ContactForm } from "./contact-form"
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Menu, X } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
+import { ContactForm } from './contact-form'
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
@@ -17,20 +17,20 @@ export default function Navbar() {
       setScrolled(window.scrollY > 20)
     }
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   return (
     <header
       className={cn(
-        "fixed top-0 w-full z-50 transition-all duration-300",
-        scrolled ? "bg-ultra-black/80 backdrop-blur-md py-3" : "bg-transparent py-5",
+        'fixed top-0 w-full z-50 transition-all duration-300',
+        scrolled ? 'bg-ultra-black/80 backdrop-blur-md py-3' : 'bg-transparent py-5',
       )}
     >
       <div className="container mx-auto px-4 flex items-center justify-between">
         <Link href="/" className="text-xl font-bold tracking-tighter">
-          <span className="text-ultra-orange">WAN  </span>AQIM
+          <span className="text-ultra-orange">WAN </span>AQIM
         </Link>
 
         <nav className="hidden md:flex items-center space-x-8">
@@ -40,7 +40,7 @@ export default function Navbar() {
           <Link href="#projects" className="text-sm hover:text-ultra-orange transition-colors">
             PROJECTS
           </Link>
-          <Link href="#resume" className="text-sm hover:text-ultra-orange transition-colors">
+          <Link href="/resume" className="text-sm hover:text-ultra-orange transition-colors">
             RESUME
           </Link>
           <Link href="#gallery" className="text-sm hover:text-ultra-orange transition-colors">
@@ -56,7 +56,12 @@ export default function Navbar() {
         </nav>
 
         {/* Mobile Menu Button */}
-        <Button variant="ghost" size="icon" className="md:hidden" onClick={() => setIsOpen(!isOpen)}>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden"
+          onClick={() => setIsOpen(!isOpen)}
+        >
           {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </Button>
       </div>
@@ -68,10 +73,14 @@ export default function Navbar() {
             <Link href="#about" className="text-2xl font-medium" onClick={() => setIsOpen(false)}>
               ABOUT
             </Link>
-            <Link href="#projects" className="text-2xl font-medium" onClick={() => setIsOpen(false)}>
+            <Link
+              href="#projects"
+              className="text-2xl font-medium"
+              onClick={() => setIsOpen(false)}
+            >
               PROJECTS
             </Link>
-            <Link href="#resume" className="text-2xl font-medium" onClick={() => setIsOpen(false)}>
+            <Link href="/resume" className="text-2xl font-medium" onClick={() => setIsOpen(false)}>
               RESUME
             </Link>
             <Link href="#gallery" className="text-2xl font-medium" onClick={() => setIsOpen(false)}>
