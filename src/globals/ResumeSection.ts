@@ -31,6 +31,7 @@ const ResumeSection: GlobalConfig = {
           payload.logger.info(`Revalidating Resume Section`)
           // revalidateTag('global_resume_section')
           revalidatePath('/')
+          revalidatePath('/resume')
         }
         return doc
       },
