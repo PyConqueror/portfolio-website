@@ -58,7 +58,7 @@ export default function Footer({ socialLinks }: { socialLinks: SocialLink }) {
       </div>
 
       {/* Contact Form Modal */}
-      <ContactForm open={contactOpen} onOpenChange={setContactOpen} />
+      <ContactForm open={contactOpen} onOpenChange={setContactOpen} socialLinks={socialLinks} />
     </footer>
   )
 }

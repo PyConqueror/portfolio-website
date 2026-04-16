@@ -24,7 +24,7 @@ const gallerySectionData = (await getGlobal('gallery-global')) as GalleryGlobal
 export default function Home() {
   return (
     <div className="min-h-screen bg-ultra-black text-white">
-      <Navbar />
+      <Navbar socialLinks={socialLinks} />
 
       <section
         className="relative h-screen flex flex-col items-center justify-center px-4 bg-cover bg-center bg-no-repeat"
@@ -33,7 +33,7 @@ export default function Home() {
         <div className="max-w-3xl mx-auto text-center space-y-6">
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-ultra-orange">
-              Creative Developer
+              Creative Engineer
             </span>
           </h1>
           <p className="text-xl md:text-2xl text-black">Building digital experiences that matter</p>
