@@ -8,6 +8,15 @@ export const SocialLinks: GlobalConfig = {
   },
   fields: [
     {
+      name: 'name',
+      type: 'text',
+      required: true,
+      defaultValue: 'Your Name',
+      admin: {
+        description: 'Enter your name',
+      },
+    },
+    {
       name: 'github',
       type: 'text',
       required: true,
@@ -32,6 +41,13 @@ export const SocialLinks: GlobalConfig = {
       defaultValue: 'mailto:your@email.com',
       admin: {
         description: 'Enter your email address with mailto: prefix',
+      },
+    },
+    {
+      name: 'phone',
+      type: 'text',
+      admin: {
+        description: 'Enter your phone number',
       },
     },
   ],
