@@ -1,9 +1,19 @@
 import type { Metadata } from 'next'
 
-import type { Media, Page, Post, Config } from '../payload-types'
+import type { Config, Media } from '../payload-types'
 
 import { mergeOpenGraph } from './mergeOpenGraph'
 import { getServerSideURL } from './getURL'
+
+/** Document shape produced when @payloadcms/plugin-seo meta fields are present */
+type SeoDocument = {
+  meta?: {
+    title?: string | null
+    description?: string | null
+    image?: Media | Config['db']['defaultIDType'] | null
+  } | null
+  slug?: string | string[] | null
+}
 
 const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
   const serverUrl = getServerSideURL()
@@ -20,11 +30,11 @@ const getImageURL = (image?: Media | Config['db']['defaultIDType'] | null) => {
 }
 
 export const generateMeta = async (args: {
-  doc: Partial<Page> | Partial<Post> | null
+  doc: Partial<SeoDocument> | null
 }): Promise<Metadata> => {
   const { doc } = args
 
-  const ogImage = getImageURL(doc?.meta?.image)
+  const ogImage = getImageURL(doc?.meta?.image ?? undefined)
 
   const title = doc?.meta?.title
     ? doc?.meta?.title + ' | Payload Website Template'
