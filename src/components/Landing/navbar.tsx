@@ -6,8 +6,9 @@ import { Menu, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ContactForm } from './contact-form'
+import { SocialLink } from '../../payload-types'
 
-export default function Navbar() {
+export default function Navbar({ socialLinks }: { socialLinks: SocialLink }) {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [contactOpen, setContactOpen] = useState(false)
@@ -102,7 +103,7 @@ export default function Navbar() {
       )}
 
       {/* Contact Form Modal */}
-      <ContactForm open={contactOpen} onOpenChange={setContactOpen} />
+      <ContactForm open={contactOpen} onOpenChange={setContactOpen} socialLinks={socialLinks} />
     </header>
   )
 }
