@@ -1,5 +1,6 @@
 import { ArrowDown } from 'lucide-react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import Navbar from '@/components/Landing/navbar'
 import AboutSection from '@/components/Landing/about-section'
@@ -27,10 +28,19 @@ export default function Home() {
       <Navbar socialLinks={socialLinks} />
 
       <section
-        className="relative h-screen flex flex-col items-center justify-center px-4 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: "url('/background.jpg')" }}
+        className="relative h-screen flex flex-col items-center justify-center px-4"
       >
-        <div className="max-w-3xl mx-auto text-center space-y-6">
+        <Image
+          src="/background.jpg"
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+          aria-hidden
+        />
+
+        <div className="relative z-10 max-w-3xl mx-auto text-center space-y-6">
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter">
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white to-ultra-orange">
               Creative Engineer
@@ -49,7 +59,7 @@ export default function Home() {
           </Button>
         </div>
 
-        <div className="absolute bottom-10 left-0 right-0 flex justify-center animate-bounce">
+        <div className="absolute bottom-10 left-0 right-0 z-10 flex justify-center animate-bounce">
           <ArrowDown className="h-6 w-6 text-ultra-orange" />
         </div>
       </section>
