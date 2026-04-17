@@ -14,7 +14,7 @@ export default function Footer({ socialLinks }: { socialLinks: SocialLink }) {
     <footer className="py-12 bg-ultra-black border-t border-ultra-gray">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-6 md:mb-0">
+          <div className="mb-6 md:mb-0 text-center md:text-left">
             <Link href="/" className="text-xl font-bold tracking-tighter">
               <span className="text-ultra-orange">ULTRA</span>FOLIO
             </Link>

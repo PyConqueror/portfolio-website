@@ -64,7 +64,7 @@ export default function GallerySection({
 
         <div className="relative">
           {/* Navigation Arrows */}
-          <div className="absolute top-1/2 -left-4 md:-left-12 transform -translate-y-1/2 z-10">
+          <div className="hidden sm:block absolute top-1/2 -left-4 md:-left-12 transform -translate-y-1/2 z-10">
             <Button
               variant="outline"
               size="icon"
@@ -76,7 +76,43 @@ export default function GallerySection({
             </Button>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="sm:hidden flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2">
+            {galleries.map((gallery, index) => {
+              const image = gallery.image as Media
+              return (
+                <div
+                  key={gallery.id}
+                  className="snap-start shrink-0 w-full relative group cursor-pointer overflow-hidden rounded-lg border border-ultra-gray"
+                  onClick={() => setSelectedImage(index)}
+                >
+                  <div className="absolute inset-0 bg-gradient-to-t from-ultra-black/80 via-transparent to-transparent z-10"></div>
+                  <div className="absolute bottom-0 left-0 w-1 h-1/3 bg-ultra-orange opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
+                  <Image
+                    src={
+                      (image && typeof image === 'object' && 'url' in image
+                        ? image.url
+                        : '/placeholder.svg') as string
+                    }
+                    alt={gallery.alt || 'Image'}
+                    width={600}
+                    height={400}
+                    className="w-full aspect-[4/3] object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-ultra-black bg-opacity-0 group-hover:bg-opacity-70 transition-all duration-300 flex items-end z-20">
+                    <div className="p-4 translate-y-full group-hover:translate-y-0 transition-transform duration-300">
+                      <span className="text-sm font-medium text-ultra-orange">{gallery.year}</span>
+                      <h3 className="text-lg font-bold">{gallery.description}</h3>
+                    </div>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+          <p className="sm:hidden mt-3 text-center text-xs text-gray-400">
+            Swipe left or right to browse more highlights
+          </p>
+
+          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {visibleGallery.map((gallery, index) => {
               const image = gallery.image as Media
               return (
@@ -109,7 +145,7 @@ export default function GallerySection({
             })}
           </div>
 
-          <div className="absolute top-1/2 -right-4 md:-right-12 transform -translate-y-1/2 z-10">
+          <div className="hidden sm:block absolute top-1/2 -right-4 md:-right-12 transform -translate-y-1/2 z-10">
             <Button
               variant="outline"
               size="icon"
@@ -123,7 +159,7 @@ export default function GallerySection({
         </div>
 
         {/* Pagination Indicators */}
-        <div className="flex justify-center mt-8 space-x-2">
+        <div className="hidden sm:flex justify-center mt-8 space-x-2">
           {Array.from({ length: totalPages }).map((_, index) => (
             <button
               key={index}
