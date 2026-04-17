@@ -32,15 +32,20 @@ const ProjectsSection: GlobalConfig = {
     ],
     afterRead: [
       async ({ doc, req }: { doc: any; req: PayloadRequest }) => {
-        if (doc.selectedProjects && Array.isArray(doc.selectedProjects)) {
+        const rawSelectedProjects = Array.isArray(doc?.selectedProjects) ? doc.selectedProjects : []
+
+        if (rawSelectedProjects.length > 0) {
           const projects = await req.payload.find({
             collection: 'projects',
+            limit: 0,
+            pagination: false,
             where: {
               id: {
-                in: doc.selectedProjects,
+                in: rawSelectedProjects,
               },
             },
           })
+
           doc.selectedProjects = projects.docs.sort((a: any, b: any) => a.order - b.order)
         }
         return doc
