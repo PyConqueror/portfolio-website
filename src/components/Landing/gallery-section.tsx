@@ -89,7 +89,7 @@ export default function GallerySection({
           </div>
           <div
             ref={desktopGalleryRef}
-            className="hidden sm:flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2"
+            className="hidden sm:flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           >
             {galleries.map((gallery, index) => {
               const image = gallery.image as Media

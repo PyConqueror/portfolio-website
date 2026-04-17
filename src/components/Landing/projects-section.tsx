@@ -124,7 +124,7 @@ export default function ProjectsSection({
           </div>
           <div
             ref={desktopProjectsRef}
-            className="hidden md:flex gap-8 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2"
+            className="hidden md:flex gap-8 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
           >
             {filteredProjects.map((project) => {
               const demoUrl = project.demoUrl?.trim()
