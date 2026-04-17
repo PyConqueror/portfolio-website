@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useRef, useState } from 'react'
 import Image from 'next/image'
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog'
 import { X, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -13,42 +13,21 @@ export default function GallerySection({
   gallerySectionData: GalleryGlobalType
 }) {
   const [selectedImage, setSelectedImage] = useState<number | null>(null)
-  const [currentPage, setCurrentPage] = useState(0)
-  const [imagesPerPage, setImagesPerPage] = useState(gallerySectionData.selectedGalleries.length)
+  const desktopGalleryRef = useRef<HTMLDivElement>(null)
   const galleries = gallerySectionData.selectedGalleries as GalleryType[]
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setImagesPerPage(1)
-      } else if (window.innerWidth < 1024) {
-        setImagesPerPage(2)
-      } else {
-        setImagesPerPage(3)
-      }
-    }
-
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
 
   const images = galleries
 
-  const totalPages = Math.ceil(images.length / imagesPerPage)
+  const handleDesktopScroll = (direction: 'left' | 'right') => {
+    const container = desktopGalleryRef.current
+    if (!container) return
 
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => (prev > 0 ? prev - 1 : totalPages - 1))
+    const scrollAmount = container.clientWidth * 0.9
+    container.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth',
+    })
   }
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : 0))
-  }
-
-  const visibleGallery = galleries.slice(
-    currentPage * imagesPerPage,
-    (currentPage + 1) * imagesPerPage,
-  )
 
   return (
     <section id="gallery" className="py-24 bg-ultra-black">
@@ -69,7 +48,7 @@ export default function GallerySection({
               variant="outline"
               size="icon"
               className="rounded-full bg-ultra-gray-dark/80 backdrop-blur-sm hover:bg-ultra-orange hover:text-ultra-black border-ultra-gray-light"
-              onClick={handlePrevPage}
+              onClick={() => handleDesktopScroll('left')}
             >
               <ChevronLeft className="h-6 w-6" />
               <span className="sr-only">Previous images</span>
@@ -108,18 +87,17 @@ export default function GallerySection({
               )
             })}
           </div>
-          <p className="sm:hidden mt-3 text-center text-xs text-gray-400">
-            Swipe left or right to browse more highlights
-          </p>
-
-          <div className="hidden sm:grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {visibleGallery.map((gallery, index) => {
+          <div
+            ref={desktopGalleryRef}
+            className="hidden sm:flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2"
+          >
+            {galleries.map((gallery, index) => {
               const image = gallery.image as Media
               return (
                 <div
                   key={gallery.id}
-                  className="relative group cursor-pointer overflow-hidden rounded-lg border border-ultra-gray"
-                  onClick={() => setSelectedImage(currentPage * imagesPerPage + index)}
+                  className="snap-start shrink-0 sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)] relative group cursor-pointer overflow-hidden rounded-lg border border-ultra-gray"
+                  onClick={() => setSelectedImage(index)}
                 >
                   <div className="absolute inset-0 bg-gradient-to-t from-ultra-black/80 via-transparent to-transparent z-10"></div>
                   <div className="absolute bottom-0 left-0 w-1 h-1/3 bg-ultra-orange opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10"></div>
@@ -150,27 +128,16 @@ export default function GallerySection({
               variant="outline"
               size="icon"
               className="rounded-full bg-ultra-gray-dark/80 backdrop-blur-sm hover:bg-ultra-orange hover:text-ultra-black border-ultra-gray-light"
-              onClick={handleNextPage}
+              onClick={() => handleDesktopScroll('right')}
             >
               <ChevronRight className="h-6 w-6" />
               <span className="sr-only">Next images</span>
             </Button>
           </div>
         </div>
-
-        {/* Pagination Indicators */}
-        <div className="hidden sm:flex justify-center mt-8 space-x-2">
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <button
-              key={index}
-              className={`w-2 h-2 rounded-full transition-all ${
-                currentPage === index ? 'bg-ultra-orange w-4' : 'bg-gray-500'
-              }`}
-              onClick={() => setCurrentPage(index)}
-              aria-label={`Go to page ${index + 1}`}
-            />
-          ))}
-        </div>
+        <p className="mt-3 text-center text-xs text-gray-400">
+          Swipe left or right to browse more highlights
+        </p>
 
         <Dialog open={selectedImage !== null} onOpenChange={() => setSelectedImage(null)}>
           <DialogContent className="max-w-4xl bg-ultra-gray-dark border-ultra-gray p-0">

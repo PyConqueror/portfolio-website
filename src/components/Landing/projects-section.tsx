@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowUpRight, Github, ChevronLeft, ChevronRight } from 'lucide-react'
@@ -17,43 +17,22 @@ export default function ProjectsSection({
 }: {
   projectSectionData: ProjectsGlobal
 }) {
-
-  const [currentPage, setCurrentPage] = useState(0)
-  const [projectsPerPage, setProjectsPerPage] = useState(3)
-  // Update projects per page based on screen size
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setProjectsPerPage(1)
-      } else if (window.innerWidth < 1024) {
-        setProjectsPerPage(2)
-      } else {
-        setProjectsPerPage(3)
-      }
-    }
-
-    handleResize()
-    window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  const desktopProjectsRef = useRef<HTMLDivElement>(null)
 
   const projects = projectSectionData.selectedProjects
 
-  const totalPages = Math.ceil(projects.length / projectsPerPage)
-
-  const handlePrevPage = () => {
-    setCurrentPage((prev) => (prev > 0 ? prev - 1 : totalPages - 1))
-  }
-
-  const handleNextPage = () => {
-    setCurrentPage((prev) => (prev < totalPages - 1 ? prev + 1 : 0))
-  }
-
   const filteredProjects = projects.filter(isProject)
-  const visibleProjects = filteredProjects.slice(
-    currentPage * projectsPerPage,
-    (currentPage + 1) * projectsPerPage,
-  )
+
+  const handleDesktopScroll = (direction: 'left' | 'right') => {
+    const container = desktopProjectsRef.current
+    if (!container) return
+
+    const scrollAmount = container.clientWidth * 0.9
+    container.scrollBy({
+      left: direction === 'left' ? -scrollAmount : scrollAmount,
+      behavior: 'smooth',
+    })
+  }
 
   return (
     <section id="projects" className="py-24 bg-ultra-black">
@@ -74,7 +53,7 @@ export default function ProjectsSection({
               variant="outline"
               size="icon"
               className="rounded-full bg-ultra-gray-dark/80 backdrop-blur-sm hover:bg-ultra-orange hover:text-black border-ultra-gray"
-              onClick={handlePrevPage}
+              onClick={() => handleDesktopScroll('left')}
             >
               <ChevronLeft className="h-6 w-6" />
               <span className="sr-only">Previous projects</span>
@@ -143,17 +122,16 @@ export default function ProjectsSection({
               )
             })}
           </div>
-          <p className="md:hidden mt-3 text-center text-xs text-gray-400">
-            Swipe left or right to browse more projects
-          </p>
-
-          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {visibleProjects.map((project) => {
+          <div
+            ref={desktopProjectsRef}
+            className="hidden md:flex gap-8 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-2"
+          >
+            {filteredProjects.map((project) => {
               const demoUrl = project.demoUrl?.trim()
               return (
                 <Card
                   key={project.id}
-                  className="bg-ultra-gray-dark border-ultra-gray overflow-hidden hover:border-ultra-orange transition-all duration-300"
+                  className="snap-start shrink-0 w-[calc((100%-2rem)/2)] lg:w-[calc((100%-4rem)/3)] bg-ultra-gray-dark border-ultra-gray overflow-hidden hover:border-ultra-orange transition-all duration-300"
                 >
                 <div className="relative h-48 overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-t from-ultra-black/80 to-transparent z-10"></div>
@@ -215,27 +193,16 @@ export default function ProjectsSection({
               variant="outline"
               size="icon"
               className="rounded-full bg-ultra-gray-dark/80 backdrop-blur-sm hover:bg-ultra-orange hover:text-black border-ultra-gray"
-              onClick={handleNextPage}
+              onClick={() => handleDesktopScroll('right')}
             >
               <ChevronRight className="h-6 w-6" />
               <span className="sr-only">Next projects</span>
             </Button>
           </div>
         </div>
-
-        {/* Pagination Indicators */}
-        <div className="hidden md:flex justify-center mt-8 space-x-2">
-          {Array.from({ length: totalPages }).map((_, index) => (
-            <button
-              key={index}
-              className={`w-2 h-2 rounded-full transition-all ${
-                currentPage === index ? 'bg-ultra-orange w-4' : 'bg-ultra-gray'
-              }`}
-              onClick={() => setCurrentPage(index)}
-              aria-label={`Go to page ${index + 1}`}
-            />
-          ))}
-        </div>
+        <p className="mt-3 text-center text-xs text-gray-400">
+          Swipe left or right to browse more projects
+        </p>
       </div>
     </section>
   )
