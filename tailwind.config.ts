@@ -77,10 +77,38 @@ const config = {
           from: { height: 'var(--radix-accordion-content-height)' },
           to: { height: '0' },
         },
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
+        'marquee-reverse': {
+          from: { transform: 'translateX(-50%)' },
+          to: { transform: 'translateX(0)' },
+        },
+        'fog-drift': {
+          from: { transform: 'translate3d(-8%, 0, 0)' },
+          to: { transform: 'translate3d(8%, 0, 0)' },
+        },
+        shimmer: {
+          from: { backgroundPosition: 'var(--shimmer-from, 0%) center' },
+          to: { backgroundPosition: 'var(--shimmer-to, -200%) center' },
+        },
+        'scroll-dot': {
+          '0%': { transform: 'translateY(0)', opacity: '1' },
+          '80%': { transform: 'translateY(14px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '0' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        marquee: 'marquee 40s linear infinite',
+        'marquee-reverse': 'marquee-reverse 40s linear infinite',
+        'fog-drift': 'fog-drift 28s ease-in-out infinite alternate',
+        'fog-drift-slow': 'fog-drift 44s ease-in-out infinite alternate-reverse',
+        shimmer: 'shimmer 12s linear infinite',
+        'spin-slow': 'spin 8s linear infinite',
+        'scroll-dot': 'scroll-dot 1.8s ease-in-out infinite',
       },
     },
   },
