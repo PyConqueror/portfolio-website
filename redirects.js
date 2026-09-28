@@ -14,6 +14,18 @@ const redirects = async () => {
 
   const redirects = [internetExplorerRedirect]
 
+  const blobStoreId = process.env.BLOB_READ_WRITE_TOKEN?.match(
+    /^vercel_blob_rw_([a-z\d]+)_[a-z\d]+$/i,
+  )?.[1]?.toLowerCase()
+
+  if (blobStoreId) {
+    redirects.push({
+      destination: `https://${blobStoreId}.public.blob.vercel-storage.com/:path*`,
+      permanent: false,
+      source: '/api/media/file/:path*',
+    })
+  }
+
   return redirects
 }
 
