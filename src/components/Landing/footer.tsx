@@ -2,60 +2,96 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Github, Linkedin, Mail } from 'lucide-react'
+import { ArrowUp, ArrowUpRight, Github, Linkedin, Mail } from 'lucide-react'
+import { motion } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { ContactForm } from './contact-form'
+import { EASE_OUT, Reveal } from './motion'
 import { SocialLink } from '../../payload-types'
+
+const socialLinkClassName =
+  'text-gray-400 hover:text-ultra-orange transition-all duration-300 hover:-translate-y-0.5'
 
 export default function Footer({ socialLinks }: { socialLinks: SocialLink }) {
   const [contactOpen, setContactOpen] = useState(false)
   const currentYear = new Date().getFullYear()
   return (
-    <footer className="py-12 bg-ultra-black border-t border-ultra-gray">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-6 md:mb-0 text-center md:text-left">
+    <footer className="relative overflow-hidden bg-ultra-black border-t border-ultra-gray">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute left-1/2 top-0 h-64 w-[40rem] max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-ultra-orange/10 blur-3xl"
+      />
+
+      <div className="container relative mx-auto px-4">
+        <div className="py-20 md:py-28 text-center">
+          <Reveal>
+            <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-gray-400">
+              Have a project in mind?
+            </p>
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter text-balance">
+              Let&apos;s build something{' '}
+              <span className="animate-shimmer bg-[linear-gradient(to_right,#FFA500_0%,#ffffff_50%,#FFA500_100%)] bg-[length:200%_auto] bg-clip-text text-transparent">
+                together
+              </span>
+            </h2>
+          </Reveal>
+          <Reveal delay={0.15}>
+            <Button
+              size="lg"
+              className="group mt-10 rounded-full bg-ultra-orange text-black hover:bg-ultra-orange/90 transition-all duration-300 hover:shadow-[0_0_40px_-5px_rgba(255,165,0,0.6)]"
+              onClick={() => setContactOpen(true)}
+            >
+              Get in Touch
+              <ArrowUpRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            </Button>
+          </Reveal>
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-ultra-gray py-8">
+          <div className="text-center md:text-left">
             <Link href="/" className="text-xl font-bold tracking-tighter">
-              <span className="text-ultra-orange">ULTRA</span>FOLIO
+              <span className="text-ultra-orange">WAN </span>AQIM
             </Link>
             <p className="mt-2 text-sm text-gray-500">© {currentYear} All rights reserved.</p>
           </div>
 
-          <div className="flex flex-col items-center mb-6 md:mb-0">
-            <Button
-              variant="outline"
-              className="rounded-full border-ultra-gray bg-ultra-gray/50 hover:bg-ultra-orange hover:text-black hover:border-ultra-orange transition-all duration-300 mb-4"
-              onClick={() => setContactOpen(true)}
-            >
-              Get in Touch
-            </Button>
-          </div>
-
           <div className="flex items-center space-x-6">
-            <Link
-              href={socialLinks?.github || '#'}
-              className="text-gray-400 hover:text-ultra-orange transition-colors"
-            >
+            <Link href={socialLinks?.github || '#'} className={socialLinkClassName}>
               <Github className="h-5 w-5" />
               <span className="sr-only">GitHub</span>
             </Link>
-            <Link
-              href={socialLinks?.linkedin || '#'}
-              className="text-gray-400 hover:text-ultra-orange transition-colors"
-            >
+            <Link href={socialLinks?.linkedin || '#'} className={socialLinkClassName}>
               <Linkedin className="h-5 w-5" />
               <span className="sr-only">LinkedIn</span>
             </Link>
-            <Link
-              href={socialLinks?.email || '#'}
-              className="text-gray-400 hover:text-ultra-orange transition-colors"
-            >
+            <Link href={socialLinks?.email || '#'} className={socialLinkClassName}>
               <Mail className="h-5 w-5" />
               <span className="sr-only">Email</span>
             </Link>
+            <button
+              type="button"
+              className="group flex h-10 w-10 items-center justify-center rounded-full border border-ultra-gray bg-ultra-gray/50 transition-all duration-300 hover:border-ultra-orange hover:bg-ultra-orange hover:text-black"
+              onClick={() => window.scrollTo({ top: 0 })}
+            >
+              <ArrowUp className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5" />
+              <span className="sr-only">Back to top</span>
+            </button>
           </div>
         </div>
       </div>
+
+      <motion.div
+        aria-hidden
+        className="select-none text-center leading-none -mb-[0.18em]"
+        initial={{ opacity: 0, y: 60 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1.2, ease: EASE_OUT }}
+      >
+        <span className="text-outline whitespace-nowrap font-bold tracking-tighter text-[clamp(3rem,17vw,15rem)] transition-colors duration-700 hover:text-ultra-orange/90">
+          WAN AQIM
+        </span>
+      </motion.div>
 
       {/* Contact Form Modal */}
       <ContactForm open={contactOpen} onOpenChange={setContactOpen} socialLinks={socialLinks} />
