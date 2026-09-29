@@ -7,7 +7,7 @@ import { AnimatePresence, motion, useMotionValueEvent, useScroll, useSpring } fr
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import { ContactForm } from './contact-form'
-import { EASE_OUT } from './motion'
+import { EASE_OUT, Magnetic, RollingText } from './motion'
 import { SocialLink } from '../../payload-types'
 
 const NAV_LINKS = [
@@ -17,11 +17,14 @@ const NAV_LINKS = [
   { label: 'GALLERY', href: '#gallery', section: 'gallery' },
 ]
 
-const MENU_ORIGIN = 'at calc(100% - 2.25rem) 2.5rem'
+// Centre of the burger button inside the pill (header top-3 + pill py-2 + half of h-10).
+const MENU_ORIGIN = 'at calc(100% - 2.5rem) 2.5625rem'
+const HIDE_AFTER = 160
 
 export default function Navbar({ socialLinks }: { socialLinks: SocialLink }) {
   const [isOpen, setIsOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [hidden, setHidden] = useState(false)
   const [contactOpen, setContactOpen] = useState(false)
   const [activeSection, setActiveSection] = useState<string | null>(null)
 
@@ -29,7 +32,9 @@ export default function Navbar({ socialLinks }: { socialLinks: SocialLink }) {
   const progress = useSpring(scrollYProgress, { stiffness: 200, damping: 30, restDelta: 0.001 })
 
   useMotionValueEvent(scrollY, 'change', (latest) => {
+    const previous = scrollY.getPrevious() ?? 0
     setScrolled(latest > 20)
+    setHidden(latest > previous && latest > HIDE_AFTER)
   })
 
   useEffect(() => {
@@ -85,13 +90,26 @@ export default function Navbar({ socialLinks }: { socialLinks: SocialLink }) {
 
   return (
     <>
-      <header
-        className={cn(
-          'fixed top-0 w-full z-50 transition-all duration-300',
-          scrolled ? 'bg-ultra-black/80 backdrop-blur-md py-3' : 'bg-transparent py-5',
-        )}
+      <motion.div
+        aria-hidden
+        style={{ scaleX: progress }}
+        className="fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-gradient-to-r from-ultra-orange-dark via-ultra-orange to-ultra-orange-light"
+      />
+
+      <motion.header
+        className="fixed inset-x-0 top-3 z-50 px-3"
+        animate={{ y: hidden && !isOpen ? '-130%' : '0%' }}
+        transition={{ duration: 0.4, ease: EASE_OUT }}
+        onFocusCapture={() => setHidden(false)}
       >
-        <div className="container mx-auto px-4 flex items-center justify-between">
+        <div
+          className={cn(
+            'mx-auto flex items-center justify-between rounded-full border py-2 pl-5 pr-2 backdrop-blur-md transition-all duration-500',
+            scrolled
+              ? 'max-w-4xl border-white/15 bg-ultra-black/70 shadow-[0_10px_40px_-15px_rgba(0,0,0,0.8)]'
+              : 'max-w-6xl border-white/10 bg-ultra-black/30',
+          )}
+        >
           <Link href="/" className="text-xl font-bold tracking-tighter">
             <span className="text-ultra-orange">WAN </span>AQIM
           </Link>
@@ -104,12 +122,12 @@ export default function Navbar({ socialLinks }: { socialLinks: SocialLink }) {
                   key={link.href}
                   href={link.href}
                   className={cn(
-                    'relative py-1 text-sm transition-colors hover:text-ultra-orange',
+                    'group relative py-1 text-sm transition-colors hover:text-ultra-orange',
                     'after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-white/40 after:transition-transform after:duration-300 hover:after:scale-x-100',
                     isActive && 'text-ultra-orange',
                   )}
                 >
-                  {link.label}
+                  <RollingText text={link.label} />
                   {isActive && (
                     <motion.span
                       layoutId="nav-active-indicator"
@@ -120,20 +138,22 @@ export default function Navbar({ socialLinks }: { socialLinks: SocialLink }) {
                 </Link>
               )
             })}
-            <Button
-              variant="outline"
-              className="rounded-full border-ultra-gray bg-ultra-gray/50 hover:bg-ultra-orange hover:text-black hover:border-ultra-orange transition-all duration-300"
-              onClick={() => setContactOpen(true)}
-            >
-              Contact
-            </Button>
+            <Magnetic>
+              <Button
+                variant="outline"
+                className="group rounded-full border-ultra-gray bg-ultra-gray/50 hover:bg-ultra-orange hover:text-black hover:border-ultra-orange transition-all duration-300"
+                onClick={() => setContactOpen(true)}
+              >
+                <RollingText text="Contact" />
+              </Button>
+            </Magnetic>
           </nav>
 
           {/* Mobile Menu Button */}
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="rounded-full md:hidden"
             aria-label={isOpen ? 'Close menu' : 'Open menu'}
             aria-expanded={isOpen}
             aria-controls="mobile-menu"
@@ -152,13 +172,7 @@ export default function Navbar({ socialLinks }: { socialLinks: SocialLink }) {
             </AnimatePresence>
           </Button>
         </div>
-
-        <motion.div
-          aria-hidden
-          style={{ scaleX: progress }}
-          className="absolute inset-x-0 bottom-0 h-0.5 origin-left bg-gradient-to-r from-ultra-orange-dark via-ultra-orange to-ultra-orange-light"
-        />
-      </header>
+      </motion.header>
 
       {/* Mobile Navigation */}
       <AnimatePresence>
@@ -193,7 +207,7 @@ export default function Navbar({ socialLinks }: { socialLinks: SocialLink }) {
                       className="group flex items-baseline gap-4"
                       onClick={() => setIsOpen(false)}
                     >
-                      <span className="text-sm font-medium text-ultra-orange">0{index + 1}</span>
+                      <span className="font-mono text-sm font-medium text-ultra-orange">0{index + 1}</span>
                       <span
                         className={cn(
                           'text-4xl font-bold tracking-tight transition-colors group-hover:text-ultra-orange',
