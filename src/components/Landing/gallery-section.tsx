@@ -10,7 +10,7 @@ import { useCarousel } from '@/hooks/use-carousel'
 import { GalleryGlobal as GalleryGlobalType, Media, Gallery as GalleryType } from '@/payload-types'
 import CarouselControls from './carousel-controls'
 import SectionHeading from './section-heading'
-import { EASE_OUT, Stagger, StaggerItem } from './motion'
+import { EASE_OUT, Stagger, StaggerItem, wipeVariants } from './motion'
 
 const SWIPE_OFFSET = 80
 const SWIPE_VELOCITY = 500
@@ -87,21 +87,24 @@ export default function GallerySection({
               >
                 <button
                   type="button"
+                  data-cursor="View"
                   className="relative block w-full group cursor-pointer overflow-hidden rounded-lg border border-ultra-gray text-left transition-colors duration-300 hover:border-ultra-orange/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ultra-orange"
                   onClick={() => openLightbox(index)}
                 >
                   <div className="absolute inset-0 bg-gradient-to-t from-ultra-black/80 via-transparent to-transparent z-10"></div>
                   <div className="absolute bottom-0 left-0 w-1 h-0 bg-ultra-orange transition-all duration-500 group-hover:h-1/3 z-30"></div>
-                  <Image
-                    src={getImageUrl(gallery)}
-                    alt={gallery.alt || 'Image'}
-                    width={600}
-                    height={400}
-                    className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-110"
-                  />
+                  <motion.div variants={wipeVariants} className="motion-reduce:![clip-path:none]">
+                    <Image
+                      src={getImageUrl(gallery)}
+                      alt={gallery.alt || 'Image'}
+                      width={600}
+                      height={400}
+                      className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-110"
+                    />
+                  </motion.div>
                   <div className="absolute inset-0 bg-ultra-black/0 group-hover:bg-ultra-black/60 transition-colors duration-300 flex items-end z-20">
                     <div className="p-4 transition-transform duration-300 [@media(hover:hover)]:translate-y-full [@media(hover:hover)]:group-hover:translate-y-0 [@media(hover:hover)]:group-focus-visible:translate-y-0">
-                      <span className="text-sm font-medium text-ultra-orange">{gallery.year}</span>
+                      <span className="font-mono text-sm font-medium text-ultra-orange">{gallery.year}</span>
                       <h3 className="text-lg font-bold">{gallery.description}</h3>
                     </div>
                   </div>
@@ -192,10 +195,10 @@ export default function GallerySection({
                       exit={{ opacity: 0, y: -12 }}
                       transition={{ duration: 0.25, ease: EASE_OUT }}
                     >
-                      <span className="block mb-4 text-xs font-medium tracking-[0.3em] text-gray-500">
+                      <span className="block mb-4 font-mono text-xs font-medium tracking-[0.3em] text-gray-500">
                         {String(activeIndex + 1).padStart(2, '0')} / {String(galleries.length).padStart(2, '0')}
                       </span>
-                      <span className="text-sm font-medium text-ultra-orange">
+                      <span className="font-mono text-sm font-medium text-ultra-orange">
                         {activeGallery.year || ''}
                       </span>
                       <DialogTitle className="text-xl font-bold mb-3 leading-snug">

@@ -2,7 +2,7 @@
 
 import { motion } from 'motion/react'
 import { cn } from '@/lib/utils'
-import { EASE_OUT, Reveal } from './motion'
+import { EASE_OUT, Reveal, ScrambleText } from './motion'
 
 export default function SectionHeading({
   index,
@@ -27,13 +27,13 @@ export default function SectionHeading({
     <Reveal className={cn(centered ? 'mx-auto max-w-3xl text-center' : 'max-w-xl', className)}>
       <p
         className={cn(
-          'mb-4 flex items-center gap-3 text-xs font-medium uppercase tracking-[0.3em]',
+          'mb-4 flex items-center gap-3 font-mono text-xs font-medium uppercase tracking-[0.3em]',
           centered && 'justify-center',
         )}
       >
         <span className="text-ultra-orange">{index}</span>
         <span className="h-px w-8 bg-ultra-orange/60" />
-        <span className="text-gray-400">{eyebrow}</span>
+        <ScrambleText text={eyebrow} className="text-gray-400" />
       </p>
       <h2 className="text-3xl font-bold tracking-tight md:text-5xl">
         {title && <>{title} </>}

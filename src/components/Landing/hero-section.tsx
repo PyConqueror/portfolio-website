@@ -1,22 +1,29 @@
 'use client'
 
-import { useRef } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { CSSProperties, PointerEvent } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowDown } from 'lucide-react'
 import {
+  AnimatePresence,
+  animate,
   motion,
   useMotionTemplate,
+  useMotionValue,
   useReducedMotion,
   useScroll,
   useSpring,
   useTransform,
 } from 'motion/react'
 import { Button } from '@/components/ui/button'
-import { EASE_OUT } from './motion'
+import { EASE_OUT, Magnetic, RollingText } from './motion'
 
 const HEADLINE = ['Creative', 'Engineer']
+const STATUS_LABEL = 'Available for work'
+const ROLES = ['digital experiences', 'AI agents', 'automations', 'web apps']
+const ROLE_INTERVAL = 2500
+const ROLE_TRANSITION = { duration: 0.4, ease: EASE_OUT }
 const GLOW_SPRING = { stiffness: 140, damping: 22, mass: 0.6 }
 
 // Each word shows one slice of a shared white-orange-white gradient that spans
@@ -37,6 +44,29 @@ function getShimmerStyle(index: number) {
 export default function HeroSection() {
   const sectionRef = useRef<HTMLElement>(null)
   const reduceMotion = useReducedMotion()
+  const [roleIndex, setRoleIndex] = useState(0)
+  const roleWidth = useMotionValue<number | string>('auto')
+  const roleMeasureRef = useRef<HTMLSpanElement>(null)
+  const previousRoleRef = useRef(roleIndex)
+
+  useEffect(() => {
+    if (reduceMotion) return
+    const interval = setInterval(() => setRoleIndex((index) => (index + 1) % ROLES.length), ROLE_INTERVAL)
+    return () => clearInterval(interval)
+  }, [reduceMotion])
+
+  useLayoutEffect(() => {
+    const previous = previousRoleRef.current
+    previousRoleRef.current = roleIndex
+    const words = roleMeasureRef.current?.children
+    if (previous === roleIndex || !words) return
+    roleWidth.set((words[previous] as HTMLElement).offsetWidth)
+    const controls = animate(roleWidth, (words[roleIndex] as HTMLElement).offsetWidth, {
+      ...ROLE_TRANSITION,
+      onComplete: () => roleWidth.set('auto'),
+    })
+    return () => controls.stop()
+  }, [roleIndex, roleWidth])
 
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -132,6 +162,21 @@ export default function HeroSection() {
         style={{ y: contentY, opacity: contentOpacity }}
         className="relative z-10 mx-auto max-w-3xl space-y-6 text-center motion-reduce:!transform-none"
       >
+        <motion.div
+          className="flex justify-center"
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.15 }}
+        >
+          <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-ultra-black/40 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-gray-200 backdrop-blur-sm">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+            </span>
+            {STATUS_LABEL}
+          </span>
+        </motion.div>
+
         <h1 className="text-5xl font-bold tracking-tighter md:text-7xl">
           <span className="sr-only">{HEADLINE.join(' ')}</span>
           <span aria-hidden>
@@ -160,7 +205,35 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.75 }}
         >
-          Building digital experiences that matter
+          <span className="sr-only">Building {ROLES.join(', ')} that matter</span>
+          <span aria-hidden>
+            Building{' '}
+            <motion.span
+              style={{ width: roleWidth }}
+              className="relative inline-block overflow-hidden align-bottom"
+            >
+              <AnimatePresence mode="popLayout" initial={false}>
+                <motion.span
+                  key={ROLES[roleIndex]}
+                  className="inline-block whitespace-nowrap text-ultra-orange"
+                  initial={{ y: '100%', opacity: 0 }}
+                  animate={{ y: '0%', opacity: 1 }}
+                  exit={{ y: '-100%', opacity: 0 }}
+                  transition={ROLE_TRANSITION}
+                >
+                  {ROLES[roleIndex]}
+                </motion.span>
+              </AnimatePresence>
+            </motion.span>{' '}
+            that matter
+            <span ref={roleMeasureRef} className="invisible absolute left-0 top-0 whitespace-nowrap">
+              {ROLES.map((role) => (
+                <span key={role} className="inline-block">
+                  {role}
+                </span>
+              ))}
+            </span>
+          </span>
         </motion.p>
 
         <motion.div
@@ -168,17 +241,19 @@ export default function HeroSection() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: EASE_OUT, delay: 0.95 }}
         >
-          <Button
-            variant="outline"
-            size="lg"
-            className="group mt-8 rounded-full border-ultra-gray bg-ultra-black/30 text-white backdrop-blur-sm transition-all duration-300 hover:border-ultra-orange hover:bg-ultra-orange hover:text-black"
-            asChild
-          >
-            <Link href="#about">
-              Explore My Work
-              <ArrowDown className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
-            </Link>
-          </Button>
+          <Magnetic>
+            <Button
+              variant="outline"
+              size="lg"
+              className="group mt-8 rounded-full border-ultra-gray bg-ultra-black/30 text-white backdrop-blur-sm transition-all duration-300 hover:border-ultra-orange hover:bg-ultra-orange hover:text-black"
+              asChild
+            >
+              <Link href="#about">
+                <RollingText text="Explore My Work" />
+                <ArrowDown className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:translate-y-0.5" />
+              </Link>
+            </Button>
+          </Magnetic>
         </motion.div>
       </motion.div>
 
@@ -193,7 +268,7 @@ export default function HeroSection() {
         >
           <span className="h-2 w-1 animate-scroll-dot rounded-full bg-ultra-orange" />
         </Link>
-        <span className="text-[10px] uppercase tracking-[0.3em] text-white/50">Scroll</span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/50">Scroll</span>
       </motion.div>
     </section>
   )

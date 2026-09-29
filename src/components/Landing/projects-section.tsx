@@ -11,7 +11,7 @@ import { useCarousel } from '@/hooks/use-carousel'
 import { ProjectsGlobal, Project, Media } from '@/payload-types'
 import CarouselControls from './carousel-controls'
 import SectionHeading from './section-heading'
-import { Stagger, StaggerItem } from './motion'
+import { Stagger, StaggerItem, wipeVariants } from './motion'
 
 function isProject(item: string | Project): item is Project {
   return (item as Project).title !== undefined
@@ -42,13 +42,15 @@ function ProjectCard({ project }: { project: Project }) {
       />
       <div className="relative h-48 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-ultra-black/80 to-transparent z-10"></div>
-        <Image
-          src={(project.image as Media).url || '/placeholder.svg'}
-          alt={project.title}
-          width={600}
-          height={300}
-          className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
-        />
+        <motion.div variants={wipeVariants} className="h-full w-full motion-reduce:![clip-path:none]">
+          <Image
+            src={(project.image as Media).url || '/placeholder.svg'}
+            alt={project.title}
+            width={600}
+            height={300}
+            className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
+          />
+        </motion.div>
       </div>
       <CardContent className="flex flex-1 flex-col p-6">
         <h3 className="text-xl font-bold mb-2 transition-colors duration-300 group-hover:text-ultra-orange">
@@ -60,7 +62,7 @@ function ProjectCard({ project }: { project: Project }) {
           {project.tags.map((tag) => {
             if (typeof tag === 'string') return null
             return (
-              <span key={tag.id} className="text-xs bg-ultra-gray px-2 py-1 rounded-full">
+              <span key={tag.id} className="font-mono text-xs bg-ultra-gray px-2 py-1 rounded-full">
                 {tag.name}
               </span>
             )

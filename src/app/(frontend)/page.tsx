@@ -5,6 +5,7 @@ import ProjectsSection from '@/components/Landing/projects-section'
 import GallerySection from '@/components/Landing/gallery-section'
 import ResumeSection from '@/components/Landing/resume-section'
 import Footer from '@/components/Landing/footer'
+import CustomCursor from '@/components/Landing/cursor'
 import { MotionProvider } from '@/components/Landing/motion'
 import { getGlobal } from '@/utilities/getGlobals'
 import {
@@ -38,6 +39,7 @@ export default function Home() {
 
         <Footer socialLinks={socialLinks} />
       </div>
+      <CustomCursor />
     </MotionProvider>
   )
 }

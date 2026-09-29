@@ -43,6 +43,14 @@ body {
   }
 }
 
+html.has-custom-cursor,
+html.has-custom-cursor * {
+  cursor: none !important;
+}
+html.has-custom-cursor :is(input, textarea, select, [contenteditable='true']) {
+  cursor: auto !important;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;
