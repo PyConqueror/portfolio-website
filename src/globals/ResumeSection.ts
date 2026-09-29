@@ -32,6 +32,7 @@ const ResumeSection: GlobalConfig = {
           // revalidateTag('global_resume_section')
           revalidatePath('/')
           revalidatePath('/resume')
+          revalidatePath('/resume.pdf')
         }
         return doc
       },
