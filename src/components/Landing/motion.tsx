@@ -13,6 +13,9 @@ import {
   type MotionValue,
   type Variants,
 } from 'motion/react'
+import type { LenisOptions } from 'lenis'
+import { ReactLenis, useLenis } from 'lenis/react'
+import 'lenis/dist/lenis.css'
 import { cn } from '@/lib/utils'
 
 export const EASE_OUT = [0.22, 1, 0.36, 1] as const
@@ -23,6 +26,8 @@ const MAGNET_SPRING = { stiffness: 220, damping: 16, mass: 0.5 }
 const SCRAMBLE_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
 const SCRAMBLE_DURATION = 700
 const ROLL_STAGGER_MS = 18
+
+const LENIS_OPTIONS: LenisOptions = { anchors: true, allowNestedScroll: true }
 
 const staggerItemVariants: Variants = {
   hidden: { opacity: 0, y: 28 },
@@ -38,8 +43,35 @@ export const wipeVariants: Variants = {
   },
 }
 
+// Radix dialogs mark the body with `data-scroll-locked`; the mobile menu sets `overflow: hidden`.
+function ScrollLockSync() {
+  const lenis = useLenis()
+
+  useEffect(() => {
+    if (!lenis) return
+    const body = document.body
+    const sync = () => {
+      if (body.hasAttribute('data-scroll-locked') || body.style.overflow === 'hidden') lenis.stop()
+      else lenis.start()
+    }
+    sync()
+    const observer = new MutationObserver(sync)
+    observer.observe(body, { attributes: true, attributeFilter: ['data-scroll-locked', 'style'] })
+    return () => observer.disconnect()
+  }, [lenis])
+
+  return null
+}
+
 export function MotionProvider({ children }: { children: ReactNode }) {
-  return <MotionConfig reducedMotion="user">{children}</MotionConfig>
+  return (
+    <MotionConfig reducedMotion="user">
+      <ReactLenis root options={LENIS_OPTIONS}>
+        <ScrollLockSync />
+        {children}
+      </ReactLenis>
+    </MotionConfig>
+  )
 }
 
 export function Reveal({
