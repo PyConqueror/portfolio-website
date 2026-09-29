@@ -51,7 +51,7 @@ export default function CarouselControls({
               style={{ width: `${((activePage + 1) / pageCount) * 100}%` }}
             />
           </span>
-          <span className="text-xs font-medium tabular-nums tracking-widest text-gray-400">
+          <span className="font-mono text-xs font-medium tabular-nums tracking-widest text-gray-400">
             {String(activePage + 1).padStart(2, '0')} / {String(pageCount).padStart(2, '0')}
           </span>
         </div>

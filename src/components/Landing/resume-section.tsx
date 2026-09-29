@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button'
 import { Download, ExternalLink, FileText, Loader2 } from 'lucide-react'
 import { ResumeSection as ResumeSectionType, Media } from '../../payload-types'
 import SectionHeading from './section-heading'
-import { Reveal } from './motion'
+import { Magnetic, Reveal, RollingText } from './motion'
 
 declare global {
   interface Window {
@@ -56,12 +56,14 @@ export default function ResumeSection({
           description="My professional experience, skills, and qualifications."
         />
         <Reveal delay={0.15} className="flex justify-center gap-4 mt-8 mb-12">
-          <Button
-            className="rounded-full bg-ultra-orange hover:bg-ultra-orange/90 text-black transition-all duration-300 hover:shadow-[0_0_30px_-5px_rgba(255,165,0,0.6)]"
-            onClick={() => window.open(resume.url as string, '_blank')}
-          >
-            <Download className="mr-2 h-4 w-4" /> Download Resume
-          </Button>
+          <Magnetic>
+            <Button
+              className="group rounded-full bg-ultra-orange hover:bg-ultra-orange/90 text-black transition-all duration-300 hover:shadow-[0_0_30px_-5px_rgba(255,165,0,0.6)]"
+              onClick={() => window.open(resume.url as string, '_blank')}
+            >
+              <Download className="mr-2 h-4 w-4" /> <RollingText text="Download Resume" />
+            </Button>
+          </Magnetic>
         </Reveal>
 
         <Reveal delay={0.2} className="w-full max-w-4xl mx-auto">

@@ -2,7 +2,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import AboutPhoto from './about-photo'
 import SectionHeading from './section-heading'
-import { Reveal } from './motion'
+import { Reveal, ScrollText } from './motion'
 import type { AboutSection as AboutSectionType, AboutMe as AboutMeType, Media, Technology } from '../../payload-types'
 
 const MIN_ITEMS_PER_ROW = 8
@@ -64,12 +64,8 @@ export default async function AboutSection({ aboutSectionData }: { aboutSectionD
 
           <div className="w-full min-w-0 md:w-1/2 space-y-6">
             <SectionHeading index="01" eyebrow="Introduction" title="About" highlight="Me" align="left" />
-            <Reveal delay={0.1}>
-              <p className="text-gray-400 text-lg">{data['Paragrah 1']}</p>
-            </Reveal>
-            <Reveal delay={0.2}>
-              <p className="text-gray-400 text-lg">{data['Paragrah 2']}</p>
-            </Reveal>
+            <ScrollText text={data['Paragrah 1']} className="text-gray-200 text-lg" />
+            <ScrollText text={data['Paragrah 2']} className="text-gray-200 text-lg" />
 
             <Reveal delay={0.3} className="pt-4">
               <h3 className="text-xl font-semibold mb-4">Skills & Expertise</h3>
