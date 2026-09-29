@@ -13,6 +13,8 @@ const mediaCacheControlHeader = {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Matches this machine's LAN address (the host a phone opens), not the phone's own IP.
+  allowedDevOrigins: ['192.168.0.*'],
   images: {
     minimumCacheTTL: 2592000,
     remotePatterns: [

@@ -62,7 +62,7 @@ export default function Footer({ socialLinks }: { socialLinks: SocialLink }) {
           </Reveal>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-ultra-gray py-8">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-ultra-gray pt-8 pb-28 md:pb-8">
           <div className="text-center md:text-left">
             <Link href="/" className="text-xl font-bold tracking-tighter">
               <span className="text-ultra-orange">WAN </span>AQIM

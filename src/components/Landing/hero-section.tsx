@@ -259,7 +259,7 @@ export default function HeroSection() {
 
       <motion.div
         style={{ opacity: contentOpacity }}
-        className="absolute bottom-8 left-0 right-0 z-10 hidden flex-col items-center gap-2 [@media(min-height:560px)]:flex"
+        className="absolute bottom-24 left-0 right-0 z-10 hidden flex-col items-center gap-2 md:bottom-8 [@media(min-height:560px)]:flex"
       >
         <Link
           href="#about"
