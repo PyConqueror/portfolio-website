@@ -1,100 +1,136 @@
 'use client'
 
-import type { PointerEvent } from 'react'
+import { useRef } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowUpRight, Github } from 'lucide-react'
-import { motion, useMotionTemplate, useMotionValue } from 'motion/react'
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react'
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+  useVelocity,
+  type MotionValue,
+  type Variants,
+} from 'motion/react'
 import { useCarousel } from '@/hooks/use-carousel'
-import { ProjectsGlobal, Project, Media } from '@/payload-types'
-import CarouselControls from './carousel-controls'
-import SectionHeading from './section-heading'
-import { Stagger, StaggerItem, wipeVariants } from './motion'
+import { ProjectsGlobal, Project, Media, Technology } from '@/payload-types'
+import { ContourBackdrop } from './contour-backdrop'
+import { Reveal, wipeVariants } from './motion'
+
+const EASE_EXPO = [0.19, 1, 0.22, 1] as const
+const SKEW_SPRING = { stiffness: 200, damping: 30 }
+const IMAGE_DRIFT = 48
+const HEADING_LINES = [
+  'Selected ',
+  <>
+    w<em>o</em>rk
+  </>,
+]
+
+const lineVariants: Variants = {
+  hidden: { y: '110%' },
+  show: (index: number) => ({
+    y: '0%',
+    transition: { duration: 1.25, ease: EASE_EXPO, delay: index * 0.1 },
+  }),
+}
+
+const cardTextVariants: Variants = {
+  hidden: { opacity: 0, y: 24 },
+  show: { opacity: 1, y: 0, transition: { duration: 1, ease: EASE_EXPO, delay: 0.15 } },
+}
+
+const trackInsetClassName = 'px-6 lg:px-[max(1.5rem,calc((100vw-1078px)/2+1.5rem))]'
+const labelClassName = 'text-[11px] uppercase tracking-[0.12em] text-white/50'
+const linkClassName =
+  'inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.12em] text-white/70 transition-colors duration-500 hover:text-white'
+const arrowClassName =
+  'flex h-12 w-12 items-center justify-center rounded-full border border-white/30 text-white transition-colors duration-500 hover:border-white disabled:pointer-events-none disabled:opacity-30'
+
+const pad = (value: number) => String(value).padStart(2, '0')
 
 function isProject(item: string | Project): item is Project {
   return (item as Project).title !== undefined
 }
 
-function ProjectCard({ project }: { project: Project }) {
+function ProjectCard({
+  project,
+  index,
+  scrollX,
+}: {
+  project: Project
+  index: number
+  scrollX: MotionValue<number>
+}) {
+  const cardRef = useRef<HTMLElement>(null)
+  const imageX = useTransform(scrollX, () => {
+    const card = cardRef.current
+    if (!card) return 0
+    const rect = card.getBoundingClientRect()
+    const center = rect.left + rect.width / 2
+    return ((center - window.innerWidth / 2) / window.innerWidth) * -IMAGE_DRIFT
+  })
   const demoUrl = project.demoUrl?.trim()
-  const glowX = useMotionValue(-400)
-  const glowY = useMotionValue(-400)
-  const spotlight = useMotionTemplate`radial-gradient(360px circle at ${glowX}px ${glowY}px, rgba(255, 165, 0, 0.14), transparent 65%)`
-
-  const handlePointerMove = (event: PointerEvent<HTMLDivElement>) => {
-    if (event.pointerType !== 'mouse') return
-    const rect = event.currentTarget.getBoundingClientRect()
-    glowX.set(event.clientX - rect.left)
-    glowY.set(event.clientY - rect.top)
-  }
+  const githubUrl = project.githubUrl?.trim()
+  const tags = project.tags.filter((tag): tag is Technology => typeof tag !== 'string')
 
   return (
-    <Card
-      onPointerMove={handlePointerMove}
-      className="group relative flex h-full flex-col bg-ultra-gray-dark border-ultra-gray overflow-hidden transition-all duration-300 hover:-translate-y-1.5 hover:border-ultra-orange hover:shadow-[0_20px_50px_-20px_rgba(255,165,0,0.35)] motion-reduce:hover:translate-y-0"
+    <motion.article
+      ref={cardRef}
+      initial="hidden"
+      whileInView="show"
+      viewport={{ once: true, amount: 0.3 }}
+      className="group w-[78vw] shrink-0 snap-start sm:w-[48vw] lg:w-[min(34vw,480px)]"
     >
       <motion.div
-        aria-hidden
-        style={{ background: spotlight }}
-        className="pointer-events-none absolute inset-0 z-20 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-      />
-      <div className="relative h-48 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-ultra-black/80 to-transparent z-10"></div>
-        <motion.div variants={wipeVariants} className="h-full w-full motion-reduce:![clip-path:none]">
+        variants={wipeVariants}
+        className="relative aspect-[4/3] w-full overflow-hidden bg-white/5"
+      >
+        <motion.div
+          style={{ x: imageX }}
+          className="absolute inset-y-0 -inset-x-[8%] motion-reduce:!transform-none"
+        >
           <Image
             src={(project.image as Media).url || '/placeholder.svg'}
             alt={project.title}
-            width={600}
-            height={300}
-            className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110"
+            fill
+            sizes="(min-width: 1024px) 34vw, (min-width: 640px) 48vw, 78vw"
+            className="object-cover transition-transform [transition-duration:1250ms] [transition-timing-function:cubic-bezier(0.19,1,0.22,1)] group-hover:scale-105"
           />
         </motion.div>
-      </div>
-      <CardContent className="flex flex-1 flex-col p-6">
-        <h3 className="text-xl font-bold mb-2 transition-colors duration-300 group-hover:text-ultra-orange">
+      </motion.div>
+      <motion.div variants={cardTextVariants} className="mt-5">
+        <div className="flex items-baseline justify-between gap-4">
+          <span className={labelClassName}>({pad(index + 1)})</span>
+          <span className={`${labelClassName} truncate`}>
+            {tags
+              .slice(0, 3)
+              .map((tag) => tag.name)
+              .join(' / ')}
+          </span>
+        </div>
+        <h3 className="mt-3 text-[clamp(1.5rem,2.4vw,2.25rem)] font-light leading-[1.1] tracking-[-0.02em]">
           {project.title}
         </h3>
-        <p className="text-gray-400 mb-4">{project.description}</p>
-
-        <div className="flex flex-wrap gap-2 mb-6">
-          {project.tags.map((tag) => {
-            if (typeof tag === 'string') return null
-            return (
-              <span key={tag.id} className="font-mono text-xs bg-ultra-gray px-2 py-1 rounded-full">
-                {tag.name}
-              </span>
-            )
-          })}
-        </div>
-
-        <div className="relative z-30 mt-auto flex items-center gap-3">
+        <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-white/55">
+          {project.description}
+        </p>
+        <div className="mt-4 flex gap-5">
           {demoUrl && (
-            <Button
-              asChild
-              variant="outline"
-              size="sm"
-              className="rounded-full border-ultra-gray hover:bg-ultra-orange hover:text-black hover:border-ultra-orange"
-            >
-              <Link href={demoUrl}>
-                <ArrowUpRight className="mr-1 h-4 w-4" /> Demo
-              </Link>
-            </Button>
-          )}
-          <Button
-            asChild
-            variant="outline"
-            size="sm"
-            className="rounded-full border-ultra-gray hover:bg-ultra-orange hover:text-black hover:border-ultra-orange"
-          >
-            <Link href={project.githubUrl || ''}>
-              <Github className="mr-1 h-4 w-4" /> Code
+            <Link href={demoUrl} className={linkClassName}>
+              Demo <ArrowUpRight className="h-3 w-3" />
             </Link>
-          </Button>
+          )}
+          {githubUrl && (
+            <Link href={githubUrl} className={linkClassName}>
+              Code <ArrowUpRight className="h-3 w-3" />
+            </Link>
+          )}
         </div>
-      </CardContent>
-    </Card>
+      </motion.div>
+    </motion.article>
   )
 }
 
@@ -103,57 +139,103 @@ export default function ProjectsSection({
 }: {
   projectSectionData: ProjectsGlobal
 }) {
+  const projects = projectSectionData.selectedProjects.filter(isProject)
+  const reduceMotion = useReducedMotion()
   const { ref: carouselRef, ...carousel } = useCarousel()
 
-  const projects = projectSectionData.selectedProjects
-
-  const filteredProjects = projects.filter(isProject)
+  const { scrollX, scrollXProgress } = useScroll({ container: carouselRef, axis: 'x' })
+  const skew = useSpring(
+    useTransform(useVelocity(scrollX), [-3000, 3000], [3, -3], { clamp: true }),
+    SKEW_SPRING,
+  )
+  const counter = useTransform(scrollXProgress, (progress) =>
+    pad(Math.round(progress * (projects.length - 1)) + 1),
+  )
 
   return (
-    <section id="projects" className="relative overflow-hidden py-24 md:py-32 bg-ultra-black">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 h-72 w-[40rem] max-w-full -translate-x-1/2 rounded-full bg-ultra-orange/5 blur-3xl"
-      />
-      <div className="container relative mx-auto px-4">
-        <SectionHeading
-          index="02"
-          eyebrow="Selected work"
-          title="Featured"
-          highlight="Projects"
-          description="A selection of my most significant work across various domains and technologies."
-          className="mb-16"
-        />
+    <section
+      id="projects"
+      className="relative overflow-hidden bg-ultra-black py-28 text-white md:py-40"
+    >
+      <ContourBackdrop progress={scrollXProgress} className="absolute inset-0" />
 
-        <div
-          ref={carouselRef}
-          className="overflow-x-auto snap-x snap-mandatory pt-3 pb-8 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
-        >
-          <Stagger className="flex gap-4 sm:gap-6">
-            {filteredProjects.map((project) => (
-              <StaggerItem
-                key={project.id}
-                className="snap-start shrink-0 w-[85%] sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)]"
-              >
-                <ProjectCard project={project} />
-              </StaggerItem>
-            ))}
-          </Stagger>
+      <div className="relative mx-auto max-w-[1078px] px-6">
+        <Reveal className="flex items-baseline justify-between border-t border-white/30 pt-4">
+          <span className={labelClassName}>(02)</span>
+          <span className={labelClassName}>Projects</span>
+          <span className={labelClassName}>({pad(projects.length)})</span>
+        </Reveal>
+
+        <div className="mt-16 flex flex-col gap-10 md:mt-24 md:flex-row md:items-end md:justify-between">
+          <div>
+            <motion.h2
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true }}
+              className="text-[clamp(3rem,9vw,8rem)] font-light leading-[0.95] tracking-[-0.03em]"
+            >
+              {HEADING_LINES.map((line, index) => (
+                <span key={index} className="block overflow-hidden pb-[0.08em]">
+                  <motion.span custom={index} variants={lineVariants} className="inline-block">
+                    {line}
+                  </motion.span>
+                </span>
+              ))}
+            </motion.h2>
+            <Reveal delay={0.2}>
+              <p className="mt-8 max-w-xs text-white/60">
+                A selection of my most significant work across various domains and technologies.
+              </p>
+            </Reveal>
+          </div>
+          <Reveal delay={0.3} className="flex gap-3">
+            <button
+              type="button"
+              className={arrowClassName}
+              onClick={() => carousel.scrollByDirection('left')}
+              disabled={!carousel.canPrev}
+            >
+              <ArrowLeft className="h-4 w-4" strokeWidth={1.25} />
+              <span className="sr-only">Previous projects</span>
+            </button>
+            <button
+              type="button"
+              className={arrowClassName}
+              onClick={() => carousel.scrollByDirection('right')}
+              disabled={!carousel.canNext}
+            >
+              <ArrowRight className="h-4 w-4" strokeWidth={1.25} />
+              <span className="sr-only">Next projects</span>
+            </button>
+          </Reveal>
         </div>
+      </div>
 
-        <CarouselControls
-          label="projects"
-          canPrev={carousel.canPrev}
-          canNext={carousel.canNext}
-          pageCount={carousel.pageCount}
-          activePage={carousel.activePage}
-          onPrev={() => carousel.scrollByDirection('left')}
-          onNext={() => carousel.scrollByDirection('right')}
-          onSelectPage={carousel.scrollToPage}
-        />
-        <p className="mt-3 text-center text-xs text-gray-400 md:hidden">
-          Swipe left or right to browse more projects
-        </p>
+      <div
+        ref={carouselRef}
+        className="relative mt-16 snap-x snap-mandatory scroll-px-6 overflow-x-auto overscroll-x-contain [scrollbar-width:none] md:mt-20 lg:scroll-px-[max(1.5rem,calc((100vw-1078px)/2+1.5rem))] [&::-webkit-scrollbar]:hidden"
+      >
+        <motion.div
+          style={{ skewX: reduceMotion ? 0 : skew }}
+          className={`flex w-max gap-6 md:gap-10 ${trackInsetClassName}`}
+        >
+          {projects.map((project, index) => (
+            <ProjectCard key={project.id} project={project} index={index} scrollX={scrollX} />
+          ))}
+        </motion.div>
+      </div>
+
+      <div className="relative mx-auto mt-12 flex max-w-[1078px] items-center gap-4 px-6">
+        <span className={labelClassName}>
+          <motion.span>{counter}</motion.span> / {pad(projects.length)}
+        </span>
+        <span className="relative h-px flex-1 bg-white/15">
+          <motion.span
+            style={{ scaleX: scrollXProgress }}
+            className="absolute inset-0 origin-left bg-white"
+          />
+        </span>
+        <span className={`${labelClassName} md:hidden`}>(Swipe)</span>
       </div>
     </section>
   )

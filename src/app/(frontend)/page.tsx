@@ -1,5 +1,6 @@
 import Navbar from '@/components/Landing/navbar'
 import HeroSection from '@/components/Landing/hero-section'
+import { LiquidStage } from '@/components/Landing/liquid-backdrop'
 import AboutSection from '@/components/Landing/about-section'
 import ProjectsSection from '@/components/Landing/projects-section'
 import GallerySection from '@/components/Landing/gallery-section'
@@ -25,9 +26,11 @@ export default function Home() {
       <div className="min-h-screen bg-ultra-black text-white">
         <Navbar socialLinks={socialLinks} />
 
-        <HeroSection />
+        <LiquidStage>
+          <HeroSection />
 
-        <AboutSection aboutSectionData={aboutSectionData} />
+          <AboutSection aboutSectionData={aboutSectionData} />
+        </LiquidStage>
 
         <ProjectsSection projectSectionData={projectsSectionData} />
 
