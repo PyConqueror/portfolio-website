@@ -2,100 +2,99 @@
 
 import { useRef, useState } from 'react'
 import Link from 'next/link'
-import { ArrowUp, ArrowUpRight, Github, Linkedin, Mail } from 'lucide-react'
+import { ArrowUp, ArrowUpRight } from 'lucide-react'
 import { motion, useMotionTemplate, useScroll, useTransform } from 'motion/react'
 import { useLenis } from 'lenis/react'
-import { Button } from '@/components/ui/button'
 import { ContactForm } from './contact-form'
-import { EASE_OUT, Magnetic, Reveal, RollingText } from './motion'
+import { LiquidRise } from './liquid-backdrop'
+import { EASE_OUT, Magnetic, RollingText } from './motion'
+import SectionHeading, { sectionLabelClassName } from './section-heading'
 import { SocialLink } from '../../payload-types'
 
-const socialLinkClassName =
-  'text-gray-400 hover:text-ultra-orange transition-all duration-300 hover:-translate-y-0.5'
+const pillClassName =
+  'group inline-flex items-center gap-2 rounded-full border border-white/30 px-[33px] py-[11px] text-base text-white transition-colors duration-700 [transition-timing-function:cubic-bezier(0.19,1,0.22,1)] hover:border-white'
+const linkClassName =
+  'inline-flex items-center gap-1 text-[11px] uppercase tracking-[0.12em] text-white/70 transition-colors duration-500 hover:text-white'
 
 export default function Footer({ socialLinks }: { socialLinks: SocialLink }) {
   const [contactOpen, setContactOpen] = useState(false)
   const currentYear = new Date().getFullYear()
   const lenis = useLenis()
+  const footerRef = useRef<HTMLElement>(null)
   const wordmarkRef = useRef<HTMLDivElement>(null)
 
+  const { scrollYProgress: footerProgress } = useScroll({
+    target: footerRef,
+    offset: ['start end', 'end end'],
+  })
   const { scrollYProgress } = useScroll({ target: wordmarkRef, offset: ['start end', 'end end'] })
   // Finishes early: the negative bottom margin leaves the wordmark's bottom edge just past the page end.
   const fill = useTransform(scrollYProgress, [0, 0.9], ['0%', '100%'])
-  const wordmarkFill = useMotionTemplate`linear-gradient(to right, #FFA500 ${fill}, transparent ${fill})`
+  const wordmarkFill = useMotionTemplate`linear-gradient(to right, #ffffff ${fill}, transparent ${fill})`
+
+  const socialItems = [
+    { label: 'GitHub', href: socialLinks?.github },
+    { label: 'LinkedIn', href: socialLinks?.linkedin },
+    { label: 'Email', href: socialLinks?.email },
+  ]
 
   const scrollToTop = () => {
     if (lenis) lenis.scrollTo(0)
     else window.scrollTo({ top: 0 })
   }
+
   return (
-    <footer className="relative overflow-hidden bg-ultra-black border-t border-ultra-gray">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute left-1/2 top-0 h-64 w-[40rem] max-w-full -translate-x-1/2 -translate-y-1/2 rounded-full bg-ultra-orange/10 blur-3xl"
+    <footer ref={footerRef} className="relative overflow-hidden bg-ultra-black text-white">
+      <LiquidRise
+        progress={footerProgress}
+        className="absolute inset-0 [mask-image:linear-gradient(to_bottom,transparent,black_30%)]"
       />
 
-      <div className="container relative mx-auto px-4">
-        <div className="py-20 md:py-28 text-center">
-          <Reveal>
-            <p className="mb-4 text-xs font-medium uppercase tracking-[0.3em] text-gray-400">
-              Have a project in mind?
-            </p>
-            <h2 className="text-4xl sm:text-5xl md:text-7xl font-bold tracking-tighter text-balance">
-              Let&apos;s build something{' '}
-              <span className="animate-shimmer bg-[linear-gradient(to_right,#FFA500_0%,#ffffff_50%,#FFA500_100%)] bg-[length:200%_auto] bg-clip-text text-transparent">
-                together
-              </span>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.15}>
+      <div className="relative mx-auto max-w-[1078px] px-6 pt-28 md:pt-40">
+        <SectionHeading
+          index="05"
+          label="Contact"
+          meta="Available for work"
+          lines={[
+            'Let’s build ',
+            'something ',
+            <>
+              <em>t</em>ogether
+            </>,
+          ]}
+          description="Have a project in mind?"
+          aside={
             <Magnetic>
-              <Button
-                size="lg"
-                className="group mt-10 rounded-full bg-ultra-orange text-black hover:bg-ultra-orange/90 transition-all duration-300 hover:shadow-[0_0_40px_-5px_rgba(255,165,0,0.6)]"
-                onClick={() => setContactOpen(true)}
-              >
-                <RollingText text="Get in Touch" />
-                <ArrowUpRight className="ml-2 h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              </Button>
+              <button type="button" className={pillClassName} onClick={() => setContactOpen(true)}>
+                <RollingText text="Get in touch" />
+                <ArrowUpRight className="h-4 w-4" strokeWidth={1.25} />
+              </button>
             </Magnetic>
-          </Reveal>
-        </div>
+          }
+        />
 
-        <div className="flex flex-col md:flex-row justify-between items-center gap-6 border-t border-ultra-gray pt-8 pb-28 md:pb-8">
-          <div className="text-center md:text-left">
-            <Link href="/" className="text-xl font-bold tracking-tighter">
-              <span className="text-ultra-orange">WAN </span>AQIM
-            </Link>
-            <p className="mt-2 text-sm text-gray-500">© {currentYear} All rights reserved.</p>
-          </div>
-
-          <div className="flex items-center space-x-6">
-            <Magnetic strength={0.5}>
-              <Link href={socialLinks?.github || '#'} className={socialLinkClassName}>
-                <Github className="h-5 w-5" />
-                <span className="sr-only">GitHub</span>
-              </Link>
-            </Magnetic>
-            <Magnetic strength={0.5}>
-              <Link href={socialLinks?.linkedin || '#'} className={socialLinkClassName}>
-                <Linkedin className="h-5 w-5" />
-                <span className="sr-only">LinkedIn</span>
-              </Link>
-            </Magnetic>
-            <Magnetic strength={0.5}>
-              <Link href={socialLinks?.email || '#'} className={socialLinkClassName}>
-                <Mail className="h-5 w-5" />
-                <span className="sr-only">Email</span>
-              </Link>
-            </Magnetic>
+        <div className="mt-28 pb-28 md:mt-40 md:pb-10">
+          <div className="flex flex-col gap-8 border-t border-white/15 pt-6 md:flex-row md:items-center md:justify-between">
+            <span className={sectionLabelClassName}>
+              © {currentYear} Wan Aqim. All rights reserved.
+            </span>
+            <nav aria-label="Social" className="flex gap-6">
+              {socialItems.map((item) => (
+                <Link key={item.label} href={item.href || '#'} className={linkClassName}>
+                  {item.label} <ArrowUpRight className="h-3 w-3" />
+                </Link>
+              ))}
+            </nav>
             <Magnetic>
               <button
                 type="button"
-                className="group flex h-10 w-10 items-center justify-center rounded-full border border-ultra-gray bg-ultra-gray/50 transition-all duration-300 hover:border-ultra-orange hover:bg-ultra-orange hover:text-black"
+                className="group flex h-11 w-11 items-center justify-center rounded-full border border-white/30 transition-colors duration-500 hover:border-white"
                 onClick={scrollToTop}
               >
-                <ArrowUp className="h-4 w-4 transition-transform duration-300 group-hover:-translate-y-0.5" />
+                <ArrowUp
+                  className="h-4 w-4 transition-transform duration-500 group-hover:-translate-y-0.5"
+                  strokeWidth={1.25}
+                />
                 <span className="sr-only">Back to top</span>
               </button>
             </Magnetic>
@@ -106,7 +105,7 @@ export default function Footer({ socialLinks }: { socialLinks: SocialLink }) {
       <motion.div
         ref={wordmarkRef}
         aria-hidden
-        className="select-none text-center leading-none -mb-[0.18em]"
+        className="relative -mb-[0.18em] select-none text-center leading-none"
         initial={{ opacity: 0, y: 60 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
@@ -114,13 +113,12 @@ export default function Footer({ socialLinks }: { socialLinks: SocialLink }) {
       >
         <motion.span
           style={{ backgroundImage: wordmarkFill }}
-          className="text-outline bg-clip-text !text-transparent whitespace-nowrap font-bold tracking-tighter text-[clamp(3rem,17vw,15rem)] transition-colors duration-700 hover:!text-ultra-orange/90"
+          className="text-outline whitespace-nowrap bg-clip-text text-[clamp(3rem,17vw,15rem)] font-normal tracking-tighter !text-transparent"
         >
           WAN AQIM
         </motion.span>
       </motion.div>
 
-      {/* Contact Form Modal */}
       <ContactForm open={contactOpen} onOpenChange={setContactOpen} socialLinks={socialLinks} />
     </footer>
   )
