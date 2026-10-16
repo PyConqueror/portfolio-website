@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { MouseEvent, PointerEvent } from 'react'
 import Link from 'next/link'
-import type { LucideIcon } from 'lucide-react'
 import {
   motion,
   useMotionTemplate,
@@ -16,7 +15,7 @@ import {
 import { cn } from '@/lib/utils'
 import { RollingText } from './motion'
 
-type NavLink = { label: string; href: string; section: string; icon: LucideIcon }
+type NavLink = { label: string; href: string; section: string }
 type Slot = { x: number; width: number }
 
 const VARIANTS = {
@@ -29,21 +28,21 @@ const VARIANTS = {
   tabs: {
     lensPadding: 0,
     track: 'w-full',
-    row: 'grid auto-cols-fr grid-flow-col',
-    item: 'flex flex-col items-center gap-1 py-2 text-[10px] font-medium leading-3 tracking-wider transition-colors',
+    row: 'flex',
+    item: 'flex flex-auto items-center justify-center py-3 text-[10px] uppercase tracking-[0.12em] transition-colors',
   },
 }
 // The labels row bleeds past the track so hover underlines and focus rings sit inside its mask.
 const ROW_BLEED = 8
 const DRAG_THRESHOLD = 4
 const RUBBER_BAND = 0.25
-const LIFT_SCALE = 0.12
-const MAGNIFICATION = 1.18
+const LIFT_SCALE = 0.4
+const MAGNIFICATION = 1.32
 const MAX_STRETCH = 0.28
 const STRETCH_SPEED = 1600
-const SLIDE_SPRING = { stiffness: 380, damping: 24, mass: 0.9, restDelta: 0.5, restSpeed: 20 }
-const LIFT_SPRING = { stiffness: 320, damping: 24 }
-const STRETCH_SPRING = { stiffness: 260, damping: 14 }
+const SLIDE_SPRING = { stiffness: 380, damping: 20, mass: 0.9, restDelta: 0.5, restSpeed: 20 }
+const LIFT_SPRING = { stiffness: 380, damping: 18 }
+const STRETCH_SPRING = { stiffness: 260, damping: 11 }
 const PRESENCE_SPRING = { stiffness: 300, damping: 30 }
 
 const REST_FILL = 'rgba(255, 255, 255, 0.12)'
@@ -239,14 +238,7 @@ export function NavSlider({
   }
 
   const renderLabel = (link: NavLink) =>
-    variant === 'bar' ? (
-      <RollingText text={link.label} />
-    ) : (
-      <>
-        <link.icon className="h-5 w-5" />
-        <span>{link.label}</span>
-      </>
-    )
+    variant === 'bar' ? <RollingText text={link.label} /> : link.label
 
   return (
     <div

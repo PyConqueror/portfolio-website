@@ -27,7 +27,17 @@ body {
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
+  }
+
+  /* Anchor jumps skip most of a section's top padding (py-28 / md:py-40) so its heading lands near the top. */
+  section[id] {
+    scroll-margin-top: -5rem;
+  }
+
+  @media (min-width: 768px) {
+    section[id] {
+      scroll-margin-top: -4rem;
+    }
   }
 }
 

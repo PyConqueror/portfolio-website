@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { FileText, FolderGit2, Images, Mail, UserRound } from 'lucide-react'
 import { motion, useMotionValueEvent, useScroll, useSpring } from 'motion/react'
 import { Button } from '@/components/ui/button'
 import { LiquidGlass } from '@/components/ui/liquid-glass'
@@ -13,10 +12,10 @@ import { NavSlider } from './nav-slider'
 import { SocialLink } from '../../payload-types'
 
 const NAV_LINKS = [
-  { label: 'ABOUT', href: '#about', section: 'about', icon: UserRound },
-  { label: 'PROJECTS', href: '#projects', section: 'projects', icon: FolderGit2 },
-  { label: 'RESUME', href: '#resume', section: 'resume', icon: FileText },
-  { label: 'GALLERY', href: '#gallery', section: 'gallery', icon: Images },
+  { label: 'ABOUT', href: '#about', section: 'about' },
+  { label: 'PROJECTS', href: '#projects', section: 'projects' },
+  { label: 'RESUME', href: '#resume', section: 'resume' },
+  { label: 'GALLERY', href: '#gallery', section: 'gallery' },
 ]
 
 // Keeps the lens on a chosen section while the page scrolls past the sections in between.
@@ -101,27 +100,23 @@ export default function Navbar({ socialLinks }: { socialLinks: SocialLink }) {
         </LiquidGlass>
       </header>
 
-      <nav
-        aria-label="Primary"
-        className="fixed inset-x-0 bottom-3 z-50 flex items-center gap-2 px-3 md:hidden"
-      >
-        <LiquidGlass className="min-w-0 flex-1 rounded-full p-1">
-          <NavSlider
-            variant="tabs"
-            links={NAV_LINKS}
-            activeSection={pinnedSection ?? activeSection}
-            onSelect={pinSection}
-          />
-        </LiquidGlass>
-        <LiquidGlass className="shrink-0 rounded-full">
-          <button
-            type="button"
+      <nav aria-label="Primary" className="fixed inset-x-0 bottom-3 z-50 px-3 md:hidden">
+        <LiquidGlass className="flex items-center gap-1 rounded-full p-1.5">
+          <div className="min-w-0 flex-1">
+            <NavSlider
+              variant="tabs"
+              links={NAV_LINKS}
+              activeSection={pinnedSection ?? activeSection}
+              onSelect={pinSection}
+            />
+          </div>
+          <Button
+            variant="outline"
+            className="shrink-0 rounded-full border-ultra-gray bg-ultra-gray/50 px-3.5 text-[10px] font-normal uppercase tracking-[0.12em] transition-all duration-300 hover:border-ultra-orange hover:bg-ultra-orange hover:text-black"
             onClick={() => setContactOpen(true)}
-            className="flex h-[60px] w-[60px] flex-col items-center justify-center gap-1 text-[10px] font-medium leading-3 tracking-wider"
           >
-            <Mail className="h-5 w-5" />
-            CONTACT
-          </button>
+            Contact
+          </Button>
         </LiquidGlass>
       </nav>
 
