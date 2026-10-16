@@ -56,6 +56,10 @@ vec3 liquid(vec2 p, float t) {
   return color * sheen * 0.8;
 }
 
+vec2 sphereCenter(float aspect, float travel) {
+  return mix(${from}, ${to}, travel);
+}
+
 void main() {
   vec2 uv = gl_FragCoord.xy / u_resolution;
   float aspect = u_resolution.x / u_resolution.y;
@@ -67,15 +71,17 @@ void main() {
   p += toMouse * 0.14 * exp(-dot(toMouse, toMouse) * 3.0);
 
   float travel = smoothstep(0.0, 1.0, u_travel);
-  vec2 center = mix(${from}, ${to}, travel) + mouse * 0.05;
+  vec2 center = sphereCenter(aspect, travel) + mouse * 0.05;
   float radius = 0.68 * clamp(aspect, 0.7, 1.0);
   vec2 offset = p - center;
   float d = length(offset) / radius;
   float inside = 1.0 - smoothstep(0.992, 1.0, d);
   float z = sqrt(max(1.0 - d * d, 0.0));
 
+  // Narrower screens sample the lens as if 16:10, so the sphere shows the same liquid as on a laptop.
+  vec2 lensCenter = sphereCenter(max(aspect, 1.6), travel) + mouse * 0.05;
   vec3 outer = liquid(p, t);
-  vec3 lens = liquid(center + offset * mix(1.3, 0.55, z), t + 3.0);
+  vec3 lens = liquid(lensCenter + offset * mix(1.3, 0.55, z) * (0.68 / radius), t + 3.0);
   lens *= 0.8 + 0.35 * z;
   float rim = smoothstep(0.9, 0.995, d) * inside;
   lens += rim * (0.12 + lens * 0.9);
